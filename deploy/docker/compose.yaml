@@ -1,0 +1,33 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    environment:
+      APP_NAME: CiteShield
+      QDRANT_HOST: qdrant
+      QDRANT_HTTP_PORT: 6333
+      QDRANT_GRPC_PORT: 6334
+      EMBEDDING_MODEL_CACHE_DIR: /models
+      TENANT_A_API_KEY: ${TENANT_A_API_KEY:-tenant-a-dev-key}
+      TENANT_B_API_KEY: ${TENANT_B_API_KEY:-tenant-b-dev-key}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - model_cache:/models
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    expose:
+      - "6333"
+      - "6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  model_cache:
+  qdrant_storage:

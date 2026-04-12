@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 700" role="img" aria-labelledby="title desc">
+  <title id="title">Future Kubernetes topology</title>
+  <desc id="desc">Kubernetes cluster layout with tenant namespaces, application namespace, and vector database namespace.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .cluster { fill: #ffffff; stroke: #94a3b8; stroke-width: 2.5; }
+      .tenant { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2; }
+      .app { fill: #dcfce7; stroke: #16a34a; stroke-width: 2; }
+      .data { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 2; }
+      .title { font: 700 24px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .ns { font: 700 18px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .label { font: 600 15px Arial, Helvetica, sans-serif; fill: #0f172a; text-anchor: middle; dominant-baseline: middle; }
+      .arrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .hint { font: 600 13px Arial, Helvetica, sans-serif; fill: #334155; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="700" rx="28" ry="28"/>
+  <text class="title" x="40" y="48">Future Kubernetes Topology</text>
+
+  <rect class="cluster" x="46" y="72" width="1308" height="588" rx="26" ry="26"/>
+  <text class="ns" x="74" y="108">Kubernetes Cluster</text>
+
+  <rect class="cluster" x="86" y="132" width="280" height="210" rx="20" ry="20"/>
+  <text class="ns" x="110" y="164">Namespace: tenant-a</text>
+  <rect class="tenant" x="118" y="204" width="216" height="50" rx="16" ry="16"/>
+  <text class="label" x="226" y="229">ConfigMap A</text>
+  <rect class="tenant" x="118" y="272" width="216" height="50" rx="16" ry="16"/>
+  <text class="label" x="226" y="297">Secret A</text>
+
+  <rect class="cluster" x="86" y="390" width="280" height="210" rx="20" ry="20"/>
+  <text class="ns" x="110" y="422">Namespace: tenant-b</text>
+  <rect class="tenant" x="118" y="462" width="216" height="50" rx="16" ry="16"/>
+  <text class="label" x="226" y="487">ConfigMap B</text>
+  <rect class="tenant" x="118" y="530" width="216" height="50" rx="16" ry="16"/>
+  <text class="label" x="226" y="555">Secret B</text>
+
+  <rect class="cluster" x="436" y="132" width="430" height="468" rx="20" ry="20"/>
+  <text class="ns" x="460" y="164">Namespace: rag-app</text>
+  <rect class="app" x="486" y="218" width="330" height="60" rx="18" ry="18"/>
+  <text class="label" x="651" y="248">FastAPI Deployment</text>
+  <rect class="app" x="486" y="332" width="150" height="54" rx="18" ry="18"/>
+  <text class="label" x="561" y="359">Service</text>
+  <rect class="app" x="666" y="332" width="150" height="54" rx="18" ry="18"/>
+  <text class="label" x="741" y="359">Metrics Endpoint</text>
+  <rect class="app" x="486" y="448" width="330" height="54" rx="18" ry="18"/>
+  <text class="label" x="651" y="475">Shared app logic with tenant-aware auth</text>
+
+  <rect class="cluster" x="930" y="132" width="370" height="468" rx="20" ry="20"/>
+  <text class="ns" x="954" y="164">Namespace: vector-db</text>
+  <rect class="data" x="986" y="238" width="258" height="62" rx="18" ry="18"/>
+  <text class="label" x="1115" y="267">Qdrant Deployment / StatefulSet</text>
+  <rect class="data" x="986" y="404" width="258" height="62" rx="18" ry="18"/>
+  <text class="label" x="1115" y="433">Persistent Volume Claim</text>
+
+  <path class="arrow" d="M 334 229 C 406 229, 418 248, 486 248"/>
+  <path class="arrow" d="M 334 297 C 402 297, 430 248, 486 248"/>
+  <path class="arrow" d="M 334 487 C 406 487, 418 248, 486 248"/>
+  <path class="arrow" d="M 334 555 C 398 555, 430 248, 486 248"/>
+
+  <path class="arrow" d="M 651 278 L 651 332"/>
+  <path class="arrow" d="M 651 278 C 651 306, 741 306, 741 332"/>
+  <path class="arrow" d="M 816 248 C 880 248, 916 269, 986 269"/>
+  <path class="arrow" d="M 1115 300 L 1115 404"/>
+
+  <text class="hint" x="488" y="536">Config and secrets can vary by tenant namespace while app code stays shared.</text>
+  <text class="hint" x="988" y="500">Qdrant remains shared at the application layer with tenant_id payload filtering.</text>
+</svg>

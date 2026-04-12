@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 420" role="img" aria-labelledby="title desc">
+  <title id="title">Condensed request path</title>
+  <desc id="desc">Compact flow showing client to FastAPI, tenant resolution, ingest and query branches, Qdrant, and answer generation.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .boxA { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+      .boxB { fill: #ecfccb; stroke: #65a30d; stroke-width: 2; }
+      .boxC { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 2; }
+      .boxD { fill: #ffffff; stroke: #94a3b8; stroke-width: 2; }
+      .title { font: 700 24px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .label { font: 600 15px Arial, Helvetica, sans-serif; fill: #0f172a; text-anchor: middle; dominant-baseline: middle; }
+      .arrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="420" rx="28" ry="28"/>
+  <text class="title" x="40" y="48">Condensed Request Path</text>
+
+  <rect class="boxD" x="68" y="170" width="138" height="56" rx="18" ry="18"/>
+  <text class="label" x="137" y="198">Client</text>
+
+  <rect class="boxA" x="264" y="170" width="150" height="56" rx="18" ry="18"/>
+  <text class="label" x="339" y="198">FastAPI</text>
+
+  <rect class="boxA" x="476" y="64" width="190" height="56" rx="18" ry="18"/>
+  <text class="label" x="571" y="92">Resolve tenant_id</text>
+
+  <rect class="boxA" x="476" y="170" width="146" height="56" rx="18" ry="18"/>
+  <text class="label" x="549" y="198">/ingest</text>
+
+  <rect class="boxA" x="476" y="276" width="146" height="56" rx="18" ry="18"/>
+  <text class="label" x="549" y="304">/query</text>
+
+  <rect class="boxB" x="708" y="146" width="146" height="56" rx="18" ry="18"/>
+  <text class="label" x="781" y="174">Chunker</text>
+
+  <rect class="boxB" x="908" y="146" width="146" height="56" rx="18" ry="18"/>
+  <text class="label" x="981" y="174">Embedder</text>
+
+  <rect class="boxC" x="1120" y="120" width="206" height="66" rx="18" ry="18"/>
+  <text class="label" x="1223" y="146">Qdrant</text>
+  <text class="label" x="1223" y="166">tenant_id payload</text>
+
+  <rect class="boxB" x="908" y="256" width="146" height="56" rx="18" ry="18"/>
+  <text class="label" x="981" y="284">LLM Generator</text>
+
+  <rect class="boxD" x="1120" y="256" width="206" height="56" rx="18" ry="18"/>
+  <text class="label" x="1223" y="284">Answer + Citations</text>
+
+  <path class="arrow" d="M 206 198 H 264"/>
+  <path class="arrow" d="M 339 170 C 339 128, 438 104, 476 92"/>
+  <path class="arrow" d="M 339 198 H 476"/>
+  <path class="arrow" d="M 339 226 C 339 264, 438 292, 476 304"/>
+  <path class="arrow" d="M 622 198 H 708"/>
+  <path class="arrow" d="M 854 174 H 908"/>
+  <path class="arrow" d="M 1054 174 H 1120"/>
+  <path class="arrow" d="M 622 304 C 748 304, 784 174, 908 174"/>
+  <path class="arrow" d="M 622 304 C 794 304, 910 153, 1120 153"/>
+  <path class="arrow" d="M 622 304 H 908"/>
+  <path class="arrow" d="M 1054 284 H 1120"/>
+</svg>

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 500" role="img" aria-labelledby="title desc">
+  <title id="title">Query flow</title>
+  <desc id="desc">Sequence diagram for query handling with tenant authentication, vector search, answer generation, and citations.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .headA { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+      .headB { fill: #ecfccb; stroke: #65a30d; stroke-width: 2; }
+      .headC { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 2; }
+      .title { font: 700 24px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .label { font: 600 15px Arial, Helvetica, sans-serif; fill: #0f172a; text-anchor: middle; dominant-baseline: middle; }
+      .step { font: 600 14px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .line { stroke: #cbd5e1; stroke-width: 2; stroke-dasharray: 8 8; }
+      .msg { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .reply { stroke: #64748b; stroke-width: 2.5; fill: none; stroke-dasharray: 7 6; marker-end: url(#arrow2); }
+      .bubble { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; rx: 10; ry: 10; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="500" rx="26" ry="26"/>
+  <text class="title" x="40" y="44">Query Flow</text>
+
+  <rect class="headA" x="54" y="72" width="170" height="44" rx="16" ry="16"/>
+  <rect class="headA" x="270" y="72" width="188" height="44" rx="16" ry="16"/>
+  <rect class="headB" x="504" y="72" width="156" height="44" rx="16" ry="16"/>
+  <rect class="headB" x="728" y="72" width="170" height="44" rx="16" ry="16"/>
+  <rect class="headC" x="966" y="72" width="128" height="44" rx="16" ry="16"/>
+  <rect class="headC" x="1166" y="72" width="178" height="44" rx="16" ry="16"/>
+
+  <text class="label" x="139" y="94">Tenant Client</text>
+  <text class="label" x="364" y="94">FastAPI /query</text>
+  <text class="label" x="582" y="94">Auth Layer</text>
+  <text class="label" x="813" y="94">Embedding Model</text>
+  <text class="label" x="1030" y="94">Qdrant</text>
+  <text class="label" x="1255" y="94">LLM / Generator</text>
+
+  <line class="line" x1="139" y1="116" x2="139" y2="456"/>
+  <line class="line" x1="364" y1="116" x2="364" y2="456"/>
+  <line class="line" x1="582" y1="116" x2="582" y2="456"/>
+  <line class="line" x1="813" y1="116" x2="813" y2="456"/>
+  <line class="line" x1="1030" y1="116" x2="1030" y2="456"/>
+  <line class="line" x1="1255" y1="116" x2="1255" y2="456"/>
+
+  <path class="msg" d="M 139 156 H 364"/>
+  <rect class="bubble" x="170" y="136" width="164" height="28"/>
+  <text class="step" x="182" y="154">1. POST /query + question</text>
+
+  <path class="msg" d="M 364 196 H 582"/>
+  <rect class="bubble" x="414" y="176" width="126" height="28"/>
+  <text class="step" x="426" y="194">2. Validate API key</text>
+
+  <path class="reply" d="M 582 236 H 364"/>
+  <rect class="bubble" x="398" y="216" width="134" height="28"/>
+  <text class="step" x="410" y="234">3. tenant_id resolved</text>
+
+  <path class="msg" d="M 364 276 H 813"/>
+  <rect class="bubble" x="510" y="256" width="126" height="28"/>
+  <text class="step" x="522" y="274">4. Embed question</text>
+
+  <path class="reply" d="M 813 316 H 364"/>
+  <rect class="bubble" x="558" y="296" width="108" height="28"/>
+  <text class="step" x="570" y="314">5. query vector</text>
+
+  <path class="msg" d="M 364 356 H 1030"/>
+  <rect class="bubble" x="590" y="336" width="230" height="28"/>
+  <text class="step" x="602" y="354">6. Search with tenant_id filter</text>
+
+  <path class="reply" d="M 1030 396 H 364"/>
+  <rect class="bubble" x="656" y="376" width="134" height="28"/>
+  <text class="step" x="668" y="394">7. top-k chunks</text>
+
+  <path class="msg" d="M 364 436 H 1255"/>
+  <rect class="bubble" x="676" y="416" width="202" height="28"/>
+  <text class="step" x="688" y="434">8. Prompt with retrieved chunks</text>
+
+  <path class="reply" d="M 1255 472 H 139"/>
+  <rect class="bubble" x="664" y="461" width="170" height="28"/>
+  <text class="step" x="676" y="479">9. answer + citations</text>
+</svg>

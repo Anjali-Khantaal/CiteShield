@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: tenant-a-basic-quota
+  namespace: tenant-a
+  labels:
+    app.kubernetes.io/name: citeshield
+    citeshield.dev/tenant: tenant_a
+spec:
+  hard:
+    configmaps: "8"
+    secrets: "8"
+    services: "2"
+    persistentvolumeclaims: "1"
+    pods: "2"
+    requests.cpu: "500m"
+    requests.memory: 512Mi
+    limits.cpu: "1"
+    limits.memory: 1Gi
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: tenant-b-basic-quota
+  namespace: tenant-b
+  labels:
+    app.kubernetes.io/name: citeshield
+    citeshield.dev/tenant: tenant_b
+spec:
+  hard:
+    configmaps: "8"
+    secrets: "8"
+    services: "2"
+    persistentvolumeclaims: "1"
+    pods: "2"
+    requests.cpu: "500m"
+    requests.memory: 512Mi
+    limits.cpu: "1"
+    limits.memory: 1Gi

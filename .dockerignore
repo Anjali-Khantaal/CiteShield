@@ -1,0 +1,16 @@
+.conda/
+.git/
+.github/
+.pytest_cache/
+.qdrant_storage/
+.venv/
+__pycache__/
+artifacts/
+condaenv.*.requirements.txt
+deploy/k8s/
+docs/
+tests/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
