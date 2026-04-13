@@ -7,6 +7,31 @@ class HealthResponse(BaseModel):
     generator: str
 
 
+class SessionContextResponse(BaseModel):
+    role: str
+    tenant_id: str | None = None
+
+
+class IndexedDocumentResponse(BaseModel):
+    tenant_id: str
+    doc_id: str
+    source: str
+    chunk_count: int
+    accessible_by: list[str]
+
+
+class DocumentInventoryResponse(BaseModel):
+    documents: list[IndexedDocumentResponse]
+    total_documents: int
+    total_chunks: int
+
+
+class DeleteDocumentResponse(BaseModel):
+    tenant_id: str
+    doc_id: str
+    deleted_chunks: int
+
+
 class QueryRequest(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
@@ -19,6 +44,7 @@ class IngestRequest(BaseModel):
 
     source: str = Field(min_length=1)
     text: str = Field(min_length=1)
+    target_tenant: str | None = None
 
 
 class IngestResponse(BaseModel):

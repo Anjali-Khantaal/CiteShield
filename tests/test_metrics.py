@@ -15,8 +15,10 @@ from app.routes.ingest import (
 from app.routes.query import (
     get_query_client,
     get_query_embedder,
+    get_query_generator,
     get_query_settings,
 )
+from app.services.generator import ExtractiveAnswerGenerator
 
 
 class KeywordEmbedder:
@@ -55,6 +57,7 @@ def test_metrics_endpoint_exposes_request_ingest_latency_and_gauge_metrics(tmp_p
     app.dependency_overrides[get_query_settings] = lambda: settings
     app.dependency_overrides[get_query_embedder] = lambda: embedder
     app.dependency_overrides[get_query_client] = lambda: client
+    app.dependency_overrides[get_query_generator] = lambda: ExtractiveAnswerGenerator()
     app.dependency_overrides[get_metrics_settings] = lambda: settings
     app.dependency_overrides[get_metrics_client] = lambda: client
 
@@ -109,6 +112,7 @@ def test_metrics_endpoint_tracks_retrieval_errors(tmp_path: Path) -> None:
     app.dependency_overrides[get_query_settings] = lambda: settings
     app.dependency_overrides[get_query_embedder] = lambda: embedder
     app.dependency_overrides[get_query_client] = lambda: client
+    app.dependency_overrides[get_query_generator] = lambda: ExtractiveAnswerGenerator()
     app.dependency_overrides[get_metrics_settings] = lambda: settings
     app.dependency_overrides[get_metrics_client] = lambda: client
 

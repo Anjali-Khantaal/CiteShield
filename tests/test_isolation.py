@@ -13,8 +13,10 @@ from app.routes.ingest import (
 from app.routes.query import (
     get_query_client,
     get_query_embedder,
+    get_query_generator,
     get_query_settings,
 )
+from app.services.generator import ExtractiveAnswerGenerator
 
 
 class KeywordEmbedder:
@@ -42,6 +44,7 @@ def _override_app_dependencies(*, client: QdrantClient, settings, embedder: Keyw
     app.dependency_overrides[get_query_settings] = lambda: settings
     app.dependency_overrides[get_query_embedder] = lambda: embedder
     app.dependency_overrides[get_query_client] = lambda: client
+    app.dependency_overrides[get_query_generator] = lambda: ExtractiveAnswerGenerator()
 
 
 def _make_test_client(tmp_path: Path) -> tuple[TestClient, QdrantClient]:
@@ -112,6 +115,64 @@ def test_ingest_route_works_for_tenant_b(tmp_path: Path) -> None:
         "source": "expense_policy.md",
         "chunk_count": 1,
     }
+
+
+def test_tenant_ingest_ignores_target_tenant_override(tmp_path: Path) -> None:
+    test_client, client = _make_test_client(tmp_path)
+
+    try:
+        response = _post_json(
+            test_client,
+            "/ingest",
+            api_key=get_settings().tenant_a_api_key,
+            payload={
+                "source": "remote_work_policy.md",
+                "text": "Tenant A requires VPN access for internal dashboards.",
+                "target_tenant": "tenant_b",
+            },
+        )
+    finally:
+        app.dependency_overrides.clear()
+        client.close()
+
+    assert response.status_code == 200
+    assert response.json()["tenant_id"] == "tenant_a"
+
+
+def test_superuser_ingest_requires_explicit_target_tenant(tmp_path: Path) -> None:
+    test_client, client = _make_test_client(tmp_path)
+
+    try:
+        missing_target = _post_json(
+            test_client,
+            "/ingest",
+            api_key=get_settings().superuser_api_key,
+            payload={
+                "source": "remote_work_policy.md",
+                "text": "Tenant A requires VPN access for internal dashboards.",
+            },
+        )
+        valid_target = _post_json(
+            test_client,
+            "/ingest",
+            api_key=get_settings().superuser_api_key,
+            payload={
+                "source": "remote_work_policy.md",
+                "text": "Tenant A requires VPN access for internal dashboards.",
+                "target_tenant": "tenant_b",
+            },
+        )
+    finally:
+        app.dependency_overrides.clear()
+        client.close()
+
+    assert missing_target.status_code == 400
+    assert (
+        missing_target.json()["detail"]
+        == "target_tenant is required when using the superuser key."
+    )
+    assert valid_target.status_code == 200
+    assert valid_target.json()["tenant_id"] == "tenant_b"
 
 
 def test_query_route_returns_only_tenant_a_citations(tmp_path: Path) -> None:
@@ -222,6 +283,25 @@ def test_invalid_or_missing_api_key_is_rejected(tmp_path: Path) -> None:
     assert invalid.json()["detail"] == "Invalid or missing API key."
     assert missing.status_code == 401
     assert missing.json()["detail"] == "Invalid or missing API key."
+
+
+def test_whoami_resolves_tenant_from_api_key(tmp_path: Path) -> None:
+    test_client, client = _make_test_client(tmp_path)
+
+    try:
+        tenant_a = test_client.get("/whoami", headers={"X-API-Key": get_settings().tenant_a_api_key})
+        tenant_b = test_client.get("/whoami", headers={"X-API-Key": get_settings().tenant_b_api_key})
+        superuser = test_client.get("/whoami", headers={"X-API-Key": get_settings().superuser_api_key})
+    finally:
+        app.dependency_overrides.clear()
+        client.close()
+
+    assert tenant_a.status_code == 200
+    assert tenant_a.json() == {"role": "tenant", "tenant_id": "tenant_a"}
+    assert tenant_b.status_code == 200
+    assert tenant_b.json() == {"role": "tenant", "tenant_id": "tenant_b"}
+    assert superuser.status_code == 200
+    assert superuser.json() == {"role": "superuser", "tenant_id": None}
 
 
 def test_malicious_request_pretending_to_be_another_tenant_still_fails(tmp_path: Path) -> None:

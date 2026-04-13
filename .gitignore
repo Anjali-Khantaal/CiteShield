@@ -8,3 +8,6 @@ __pycache__/
 .qdrant_storage/
 artifacts/
 condaenv.*.requirements.txt
+frontend/node_modules/
+frontend/dist/
+.env.example

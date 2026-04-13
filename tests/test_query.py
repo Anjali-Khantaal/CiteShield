@@ -8,8 +8,10 @@ from app.main import app
 from app.routes.query import (
     get_query_client,
     get_query_embedder,
+    get_query_generator,
     get_query_settings,
 )
+from app.services.generator import ExtractiveAnswerGenerator
 from app.services.ingestion import ingest_documents
 from app.services.retriever import retrieve_chunks
 
@@ -121,9 +123,13 @@ def test_query_route_returns_answer_and_citations_for_requested_tenant(tmp_path:
     def override_client():
         return client
 
+    def override_generator():
+        return ExtractiveAnswerGenerator()
+
     app.dependency_overrides[get_query_settings] = override_settings
     app.dependency_overrides[get_query_embedder] = override_embedder
     app.dependency_overrides[get_query_client] = override_client
+    app.dependency_overrides[get_query_generator] = override_generator
 
     try:
         response = TestClient(app).post(

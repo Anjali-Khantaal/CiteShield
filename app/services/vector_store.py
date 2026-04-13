@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from uuid import NAMESPACE_URL, uuid5
 
 from qdrant_client import QdrantClient, models
@@ -20,6 +21,14 @@ SUPPORTED_CHUNK_PAYLOAD_FIELDS = (
     "page",
     LINE_RANGE_FIELD,
 )
+
+
+@dataclass(frozen=True)
+class IndexedDocument:
+    tenant_id: str
+    doc_id: str
+    source: str
+    chunk_count: int
 
 
 def get_qdrant_client(settings: Settings | None = None) -> QdrantClient:
@@ -143,6 +152,96 @@ def count_collection_points(
         exact=True,
     )
     return result.count
+
+
+def list_indexed_documents(
+    client: QdrantClient,
+    collection_name: str,
+) -> list[IndexedDocument]:
+    grouped: dict[tuple[str, str, str], int] = {}
+    offset: str | int | None = None
+
+    while True:
+        points, offset = client.scroll(
+            collection_name=collection_name,
+            limit=256,
+            offset=offset,
+            with_payload=True,
+            with_vectors=False,
+        )
+
+        for point in points:
+            payload = point.payload or {}
+            tenant_id = payload.get(TENANT_ID_FIELD)
+            doc_id = payload.get(DOC_ID_FIELD)
+            source = payload.get(SOURCE_FIELD)
+
+            if not isinstance(tenant_id, str) or not isinstance(doc_id, str) or not isinstance(source, str):
+                continue
+
+            key = (tenant_id, doc_id, source)
+            grouped[key] = grouped.get(key, 0) + 1
+
+        if offset is None:
+            break
+
+    return [
+        IndexedDocument(
+            tenant_id=tenant_id,
+            doc_id=doc_id,
+            source=source,
+            chunk_count=chunk_count,
+        )
+        for (tenant_id, doc_id, source), chunk_count in sorted(
+            grouped.items(),
+            key=lambda item: (item[0][0], item[0][2], item[0][1]),
+        )
+    ]
+
+
+def delete_document_chunks(
+    client: QdrantClient,
+    collection_name: str,
+    tenant_id: str,
+    doc_id: str,
+) -> int:
+    count = client.count(
+        collection_name=collection_name,
+        count_filter=models.Filter(
+            must=[
+                models.FieldCondition(
+                    key=TENANT_ID_FIELD,
+                    match=models.MatchValue(value=tenant_id),
+                ),
+                models.FieldCondition(
+                    key=DOC_ID_FIELD,
+                    match=models.MatchValue(value=doc_id),
+                ),
+            ]
+        ),
+        exact=True,
+    ).count
+
+    if count == 0:
+        return 0
+
+    client.delete(
+        collection_name=collection_name,
+        points_selector=models.Filter(
+            must=[
+                models.FieldCondition(
+                    key=TENANT_ID_FIELD,
+                    match=models.MatchValue(value=tenant_id),
+                ),
+                models.FieldCondition(
+                    key=DOC_ID_FIELD,
+                    match=models.MatchValue(value=doc_id),
+                ),
+            ]
+        ),
+        wait=True,
+    )
+    return count
 
 
 def _build_point_id(tenant_id: str, doc_id: str, chunk_id: int) -> str:

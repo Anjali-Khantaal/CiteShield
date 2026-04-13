@@ -1,5 +1,15 @@
-from app.services.generator import ExtractiveAnswerGenerator, generate_answer
+from app.services.generator import (
+    ExtractiveAnswerGenerator,
+    GeminiAnswerGenerator,
+    GeminiStructuredAnswer,
+    generate_answer,
+)
 from app.services.retriever import RetrievalMatch
+
+
+class FakeGeminiResponse:
+    def __init__(self, parsed: GeminiStructuredAnswer) -> None:
+        self.parsed = parsed
 
 
 def test_generate_answer_returns_grounded_answer_and_citations() -> None:
@@ -111,3 +121,113 @@ def test_generate_answer_abstains_when_high_score_chunk_has_no_question_overlap(
 
     assert "do not have enough reliable context" in result.answer
     assert result.citations == []
+
+
+def test_gemini_answer_generator_returns_grounded_answer_and_citations() -> None:
+    matches = [
+        RetrievalMatch(
+            tenant_id="tenant_a",
+            doc_id="remote_work_policy",
+            chunk_id=0,
+            source="remote_work_policy.md",
+            text="Employees must connect through the corporate VPN before opening internal dashboards.",
+            line_range="1-1",
+            score=0.82,
+        ),
+        RetrievalMatch(
+            tenant_id="tenant_a",
+            doc_id="security_guidelines",
+            chunk_id=2,
+            source="security_guidelines.md",
+            text="Access to customer systems also requires MFA.",
+            line_range="2-2",
+            score=0.46,
+        ),
+    ]
+
+    generator = GeminiAnswerGenerator(
+        api_key="test-key",
+        model_name="gemini-2.5-flash",
+        generate_content=lambda **_: FakeGeminiResponse(
+            GeminiStructuredAnswer(
+                answer="Employees must use the corporate VPN before opening internal dashboards.",
+                used_chunk_indices=[0],
+            )
+        ),
+    )
+
+    result = generate_answer(
+        "What is the VPN rule for internal dashboards?",
+        matches,
+        generator=generator,
+    )
+
+    assert "VPN" in result.answer
+    assert result.citations == [type(result.citations[0])(source="remote_work_policy.md", chunk_id=0)]
+
+
+def test_gemini_answer_generator_abstains_when_model_returns_invalid_chunk_indices() -> None:
+    matches = [
+        RetrievalMatch(
+            tenant_id="tenant_b",
+            doc_id="expense_policy",
+            chunk_id=0,
+            source="expense_policy.md",
+            text="Refund requests are reviewed by billing operations.",
+            line_range="1-1",
+            score=0.77,
+        )
+    ]
+
+    generator = GeminiAnswerGenerator(
+        api_key="test-key",
+        model_name="gemini-2.5-flash",
+        generate_content=lambda **_: FakeGeminiResponse(
+            GeminiStructuredAnswer(
+                answer="Refund requests are reviewed by billing operations.",
+                used_chunk_indices=[9],
+            )
+        ),
+    )
+
+    result = generate_answer(
+        "Who reviews refund requests?",
+        matches,
+        generator=generator,
+    )
+
+    assert "do not have enough reliable context" in result.answer
+    assert result.citations == []
+
+
+def test_gemini_answer_generator_falls_back_to_extractive_when_provider_fails() -> None:
+    matches = [
+        RetrievalMatch(
+            tenant_id="tenant_a",
+            doc_id="remote_work_policy",
+            chunk_id=0,
+            source="remote_work_policy.md",
+            text="Employees must connect through the corporate VPN before opening internal dashboards.",
+            line_range="1-1",
+            score=0.82,
+        )
+    ]
+
+    def failing_generate_content(**_: object) -> object:
+        raise RuntimeError("503 UNAVAILABLE")
+
+    generator = GeminiAnswerGenerator(
+        api_key="test-key",
+        model_name="gemini-2.5-flash",
+        generate_content=failing_generate_content,
+        fallback_generator=ExtractiveAnswerGenerator(),
+    )
+
+    result = generate_answer(
+        "What is the VPN rule for internal dashboards?",
+        matches,
+        generator=generator,
+    )
+
+    assert "VPN" in result.answer
+    assert result.citations == [type(result.citations[0])(source="remote_work_policy.md", chunk_id=0)]

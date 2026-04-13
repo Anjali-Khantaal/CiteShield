@@ -63,3 +63,26 @@ def test_health_returns_degraded_when_generator_is_not_configured() -> None:
         "qdrant": "ok",
         "generator": "not_configured",
     }
+
+
+def test_health_returns_degraded_when_gemini_key_is_missing() -> None:
+    gemini_settings = get_settings().model_copy(
+        update={
+            "generator_backend": "gemini",
+            "gemini_api_key": None,
+        }
+    )
+    app.dependency_overrides[get_health_settings] = lambda: gemini_settings
+    app.dependency_overrides[get_health_client] = lambda: HealthyClient()
+
+    try:
+        response = TestClient(app).get("/health")
+    finally:
+        app.dependency_overrides.clear()
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "status": "degraded",
+        "qdrant": "ok",
+        "generator": "not_configured",
+    }
