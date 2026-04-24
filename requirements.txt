@@ -8,3 +8,4 @@ pytest==9.0.3
 qdrant-client==1.17.1
 sentence-transformers==5.4.0
 uvicorn[standard]==0.44.0
+locust==2.36.2

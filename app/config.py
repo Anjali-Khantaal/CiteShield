@@ -1,6 +1,15 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_PLACEHOLDER_SENTINELS = {
+    "__set_if_using_gemini__",
+    "__optional_for_local_servers__",
+    "__set_only_for_remote_qdrant__",
+    "__optional_http_or_file_uri__",
+    "__set-before-use__",
+}
 
 
 class Settings(BaseSettings):
@@ -8,6 +17,7 @@ class Settings(BaseSettings):
     tenant_a_api_key: str = "tenant-a-dev-key"
     tenant_b_api_key: str = "tenant-b-dev-key"
     superuser_api_key: str = "superuser-dev-key"
+    embedding_backend: str = "sentence_transformers"
     embedding_model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_batch_size: int = 32
     embedding_model_cache_dir: str | None = None
@@ -23,6 +33,10 @@ class Settings(BaseSettings):
     gemini_temperature: float = 0.0
     gemini_max_output_tokens: int = 300
     gemini_timeout_seconds: int = 30
+    openai_compatible_base_url: str = "http://127.0.0.1:8001/v1"
+    openai_compatible_model: str = "meta-llama/Llama-3.1-8B-Instruct"
+    openai_compatible_api_key: str | None = None
+    mlflow_tracking_uri: str | None = None
     feature_strict_grounding: bool = True
     frontend_allowed_origins_raw: str = (
         "http://localhost:5173,"
@@ -38,12 +52,29 @@ class Settings(BaseSettings):
     qdrant_prefer_grpc: bool = False
     qdrant_timeout_seconds: int = 10
     qdrant_local_path: str | None = None
+    qdrant_api_key: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @field_validator(
+        "gemini_api_key",
+        "openai_compatible_api_key",
+        "qdrant_api_key",
+        "mlflow_tracking_uri",
+        mode="before",
+    )
+    @classmethod
+    def _normalize_optional_secrets(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = str(value).strip()
+        if not normalized or normalized in _PLACEHOLDER_SENTINELS:
+            return None
+        return normalized
 
     @property
     def qdrant_url(self) -> str:

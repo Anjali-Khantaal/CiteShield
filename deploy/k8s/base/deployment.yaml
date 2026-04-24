@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: qdrant
-          image: qdrant/qdrant:latest
+          image: qdrant/qdrant:v1.11.3
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -89,9 +89,7 @@ spec:
     spec:
       containers:
         - name: api
-          # Replace with a pushed registry image for remote clusters,
-          # or load the local image into your kind/minikube cluster.
-          image: citeshield-api:latest
+          image: ghcr.io/anjali-khantaal/citeshield-api:v0.1.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -118,7 +116,7 @@ spec:
               cpu: 250m
               memory: 512Mi
             limits:
-              cpu: 1
+              cpu: "1"
               memory: 2Gi
           volumeMounts:
             - name: model-cache

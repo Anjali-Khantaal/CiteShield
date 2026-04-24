@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from qdrant_client import QdrantClient
 
 from app.auth import SessionContext, get_session_context
@@ -31,12 +31,14 @@ def get_ingest_client(
 @router.post("/ingest", response_model=IngestResponse)
 def ingest_document(
     request: IngestRequest,
+    fastapi_request: Request,
     session: SessionContext = Depends(get_session_context),
     settings: Settings = Depends(get_ingest_settings),
     embedder: EmbeddingService = Depends(get_ingest_embedder),
     client: QdrantClient = Depends(get_ingest_client),
 ) -> IngestResponse:
     tenant_id = _resolve_ingest_tenant_id(session=session, request=request)
+    fastapi_request.state.tenant_id = tenant_id
     result = ingest_source_document(
         tenant_id=tenant_id,
         source=request.source,
