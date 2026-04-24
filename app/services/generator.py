@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import logging
 import re
+import httpx
 from typing import Any, Callable, Protocol, Sequence
 
 from pydantic import BaseModel, Field
@@ -138,6 +139,58 @@ class ExtractiveAnswerGenerator:
         return AnswerWithCitations(answer=answer, citations=citations)
 
 
+
+class OpenAICompatibleAnswerGenerator:
+    def __init__(
+        self,
+        *,
+        base_url: str,
+        model_name: str,
+        api_key: str | None = None,
+        timeout_seconds: int = 30,
+        fallback_generator: AnswerGenerator | None = None,
+    ) -> None:
+        self.base_url = base_url.rstrip("/")
+        self.model_name = model_name
+        self.api_key = api_key
+        self.timeout_seconds = timeout_seconds
+        self.fallback_generator = fallback_generator
+
+    def generate_answer(self, question: str, retrieved_chunks: Sequence[RetrievalMatch]) -> AnswerWithCitations:
+        if not retrieved_chunks:
+            return _abstain()
+
+        payload = {
+            "model": self.model_name,
+            "messages": [
+                {"role": "system", "content": _GEMINI_SYSTEM_INSTRUCTION},
+                {"role": "user", "content": _build_gemini_prompt(question=question, retrieved_chunks=retrieved_chunks)},
+            ],
+            "temperature": 0.0,
+            "response_format": {"type": "json_object"},
+        }
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+
+        try:
+            response = httpx.post(
+                f"{self.base_url}/chat/completions",
+                json=payload,
+                headers=headers,
+                timeout=self.timeout_seconds,
+            )
+            response.raise_for_status()
+            body = response.json()
+            message = body["choices"][0]["message"]["content"]
+            structured = GeminiStructuredAnswer.model_validate_json(message)
+            return _validate_grounded_answer(structured, retrieved_chunks)
+        except Exception as exc:
+            if self.fallback_generator is not None:
+                _LOGGER.warning("OpenAI-compatible generation failed, falling back to extractive: %s", exc)
+                return self.fallback_generator.generate_answer(question, retrieved_chunks)
+            raise RuntimeError("OpenAI-compatible generation request failed.") from exc
+
 class GeminiAnswerGenerator:
     def __init__(
         self,
@@ -202,6 +255,22 @@ def get_answer_generator(settings: Settings | None = None) -> AnswerGenerator:
                 settings.generator_min_term_overlap if settings.feature_strict_grounding else 0
             ),
             max_sentences=settings.generator_max_sentences,
+        )
+
+    if backend == "openai_compatible":
+        fallback_generator = ExtractiveAnswerGenerator(
+            min_score_threshold=settings.generator_min_score_threshold,
+            min_term_overlap=(
+                settings.generator_min_term_overlap if settings.feature_strict_grounding else 0
+            ),
+            max_sentences=settings.generator_max_sentences,
+        )
+        return OpenAICompatibleAnswerGenerator(
+            base_url=settings.openai_compatible_base_url,
+            model_name=settings.openai_compatible_model,
+            api_key=settings.openai_compatible_api_key,
+            timeout_seconds=settings.gemini_timeout_seconds,
+            fallback_generator=fallback_generator,
         )
 
     if backend == "gemini":

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: citeshield-api
+  namespace: rag-app
+spec:
+  selector:
+    app.kubernetes.io/name: citeshield
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: citeshield-qdrant
+  namespace: vector-db
+spec:
+  selector:
+    app.kubernetes.io/name: citeshield
+    app.kubernetes.io/component: qdrant
+  ports:
+    - name: http
+      port: 6333
+      targetPort: http
+    - name: grpc
+      port: 6334
+      targetPort: grpc
