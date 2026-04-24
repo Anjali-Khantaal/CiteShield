@@ -52,6 +52,7 @@ def test_summarize_results_tracks_hits_abstentions_and_latency() -> None:
         "retrieval_hit_rate_overall": 0.5,
         "retrieval_hit_rate_positive": 0.5,
         "abstain_rate_negative": 0.0,
+        "citation_hit_rate_positive": 0.5,
         "citation_present_rate_positive": 0.5,
         "average_latency_ms": 10.0,
     }

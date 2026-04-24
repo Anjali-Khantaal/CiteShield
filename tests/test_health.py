@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.config import get_settings
+from app.config import Settings, get_settings
 from app.main import app
 from app.routes.health import get_health_client, get_health_settings
 
@@ -86,3 +86,17 @@ def test_health_returns_degraded_when_gemini_key_is_missing() -> None:
         "qdrant": "ok",
         "generator": "not_configured",
     }
+
+
+def test_health_returns_degraded_when_gemini_key_is_placeholder() -> None:
+    gemini_settings = Settings(generator_backend="gemini", gemini_api_key="__set_if_using_gemini__")
+    app.dependency_overrides[get_health_settings] = lambda: gemini_settings
+    app.dependency_overrides[get_health_client] = lambda: HealthyClient()
+
+    try:
+        response = TestClient(app).get("/health")
+    finally:
+        app.dependency_overrides.clear()
+
+    assert response.status_code == 503
+    assert response.json()["generator"] == "not_configured"

@@ -11,6 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import Settings, get_settings
+from app.tracing import LifecycleTracker
 from app.services.embeddings import EmbeddingService, get_embedding_service
 from app.services.generator import AnswerGenerator, generate_answer, get_answer_generator
 from app.services.ingestion import ingest_documents
@@ -72,6 +73,11 @@ def parse_args() -> argparse.Namespace:
         "--top-k",
         type=int,
         help="Override the configured retrieval top_k for evaluation.",
+    )
+    parser.add_argument(
+        "--summary-json",
+        default="artifacts/evaluation_summary.json",
+        help="Optional JSON path for summary output.",
     )
     return parser.parse_args()
 
@@ -240,6 +246,10 @@ def summarize_results(results: list[EvaluationResult], *, cases: list[Evaluation
             sum(result.answer_abstained for result in negative_results),
             len(negative_results),
         ),
+        "citation_hit_rate_positive": _ratio(
+            sum(result.citation_hit for result in positive_results),
+            len(positive_results),
+        ),
         "citation_present_rate_positive": _ratio(
             sum(result.citation_present for result in positive_results),
             len(positive_results),
@@ -314,9 +324,31 @@ def main() -> None:
     )
     write_results_csv(results, output_path)
     summary = summarize_results(results, cases=cases)
+    summary_path = (PROJECT_ROOT / args.summary_json).resolve()
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    tracker = LifecycleTracker(tracking_uri=settings.mlflow_tracking_uri)
+    tracker.log_evaluation_run(
+        params={
+            "embedding_model_name": settings.embedding_model_name,
+            "generator_backend": settings.generator_backend,
+            "generator_model_name": settings.gemini_model_name if settings.generator_backend == "gemini" else settings.openai_compatible_model if settings.generator_backend == "openai_compatible" else "extractive",
+            "retrieval_top_k": settings.retrieval_top_k,
+            "chunk_size_chars": settings.chunk_size_chars,
+        },
+        metrics={
+            "cases_total": summary["cases_total"],
+            "retrieval_hit_rate_positive": summary["retrieval_hit_rate_positive"],
+            "citation_hit_rate_positive": summary["citation_hit_rate_positive"],
+            "abstain_rate_negative": summary["abstain_rate_negative"],
+            "average_latency_ms": summary["average_latency_ms"],
+        },
+    )
 
     print("Evaluation complete")
     print(f"output={output_path}")
+    print(f"summary_json={summary_path}")
     print("summary=" + json.dumps(summary, sort_keys=True))
 
     client.close()

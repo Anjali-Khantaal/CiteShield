@@ -3,11 +3,7 @@ kind: Service
 metadata:
   name: citeshield-api
   namespace: rag-app
-  labels:
-    app.kubernetes.io/name: citeshield
-    app.kubernetes.io/component: api
 spec:
-  type: ClusterIP
   selector:
     app.kubernetes.io/name: citeshield
     app.kubernetes.io/component: api
@@ -21,11 +17,7 @@ kind: Service
 metadata:
   name: citeshield-qdrant
   namespace: vector-db
-  labels:
-    app.kubernetes.io/name: citeshield
-    app.kubernetes.io/component: qdrant
 spec:
-  type: ClusterIP
   selector:
     app.kubernetes.io/name: citeshield
     app.kubernetes.io/component: qdrant
