@@ -1,9 +1,17 @@
+import os
+
 from locust import HttpUser, between, task
 
 
 class CiteShieldUser(HttpUser):
+    host = os.getenv("CITESHIELD_BASE_URL", "http://127.0.0.1:8000")
     wait_time = between(0.5, 2.0)
-    headers = {"X-API-Key": "tenant-a-dev-key"}
+    headers = {
+        "X-API-Key": os.getenv(
+            "CITESHIELD_TENANT_API_KEY",
+            os.getenv("TENANT_A_API_KEY", "tenant-a-dev-key"),
+        )
+    }
 
     @task(3)
     def health(self):

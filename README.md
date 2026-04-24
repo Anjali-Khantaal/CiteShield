@@ -1,11 +1,11 @@
 # CiteShield
 
-CiteShield is a multi-tenant RAG service designed to showcase **ML platform operations**: reproducible deployment, tenant-aware retrieval, observability, evaluation/lifecycle tracking, and Kubernetes assets.
+CiteShield is a multi-tenant RAG prototype focused on **ML platform operations**: reproducible deployment, tenant isolation, observability, evaluation, and Kubernetes workflows.
 
 ## Why this project matters
-This repo is intentionally focused on platform engineering concerns (operations, monitoring, evaluation, security posture) rather than chatbot feature breadth.
+This repo emphasizes platform engineering (ops, deployment, monitoring, lifecycle evidence) rather than chatbot feature breadth.
 
-## Quick start
+## Safe local default path (no paid API required)
 ```bash
 cp .env.example .env
 make setup
@@ -13,34 +13,42 @@ make up
 python scripts/smoke_test.py
 ```
 
-Run evaluation (no paid API required):
+Defaults:
+- `GENERATOR_BACKEND=extractive` (no external LLM API required)
+- `EMBEDDING_BACKEND=sentence_transformers` for realistic local runs
+
+Offline/restricted-network evaluation:
 ```bash
 make eval
 ```
+(`make eval` forces `EMBEDDING_BACKEND=hash` for deterministic offline embeddings.)
 
-Stop services:
-```bash
-make down
-```
+## Kubernetes assets
+Use only:
+- `deploy/k8s/base/`
+- `deploy/k8s/overlays/local/`
+- `deploy/k8s/overlays/prod-template/`
+
+Production secrets must be created out-of-band (not from committed placeholder manifests).
+
+## Security note
+Never commit a real `.env`, API key, password, or token.
 
 ## Make targets
-- `make setup` install Python dependencies
-- `make test` run test suite
-- `make up` / `make down` start/stop local stack
-- `make eval` run evaluation with extractive backend
-- `make build` build API image
-- `make k8s-deploy` deploy local k8s overlay
-- `make k8s-smoke` smoke check k8s deployment
-- `make k8s-clean` remove k8s resources
+- `make setup`
+- `make test`
+- `make up` / `make down`
+- `make eval`
+- `make build`
+- `make k8s-deploy`
+- `make k8s-smoke`
+- `make k8s-clean`
 
 ## Ops and platform docs
-- [Architecture](docs/architecture.md)
 - [Kubernetes quickstart](docs/kubernetes_quickstart.md)
 - [Operations runbook](docs/operations_runbook.md)
 - [Observability](docs/observability.md)
-- [Model lifecycle](docs/model_lifecycle.md)
-- [Threat model](docs/threat_model.md)
-- [Benchmark report](docs/benchmark_report.md)
-- [CERN alignment](docs/cern_alignment.md)
 - [Manual configuration](docs/manual_configuration.md)
-- [LLM serving backends](docs/llm_serving_backends.md)
+- [Limitations](docs/limitations.md)
+- [CERN alignment](docs/cern_alignment.md)
+- [Benchmark report](docs/benchmark_report.md)

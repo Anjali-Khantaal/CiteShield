@@ -1,6 +1,15 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_PLACEHOLDER_SENTINELS = {
+    "__set_if_using_gemini__",
+    "__optional_for_local_servers__",
+    "__set_only_for_remote_qdrant__",
+    "__optional_http_or_file_uri__",
+    "__set-before-use__",
+}
 
 
 class Settings(BaseSettings):
@@ -8,6 +17,7 @@ class Settings(BaseSettings):
     tenant_a_api_key: str = "tenant-a-dev-key"
     tenant_b_api_key: str = "tenant-b-dev-key"
     superuser_api_key: str = "superuser-dev-key"
+    embedding_backend: str = "sentence_transformers"
     embedding_model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_batch_size: int = 32
     embedding_model_cache_dir: str | None = None
@@ -49,6 +59,22 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @field_validator(
+        "gemini_api_key",
+        "openai_compatible_api_key",
+        "qdrant_api_key",
+        "mlflow_tracking_uri",
+        mode="before",
+    )
+    @classmethod
+    def _normalize_optional_secrets(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = str(value).strip()
+        if not normalized or normalized in _PLACEHOLDER_SENTINELS:
+            return None
+        return normalized
 
     @property
     def qdrant_url(self) -> str:

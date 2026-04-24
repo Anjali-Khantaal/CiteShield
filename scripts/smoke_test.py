@@ -1,8 +1,10 @@
+import os
 import sys
+
 import httpx
 
-BASE_URL = "http://127.0.0.1:8000"
-TENANT_KEY = "tenant-a-dev-key"
+BASE_URL = os.getenv("CITESHIELD_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
+TENANT_KEY = os.getenv("CITESHIELD_TENANT_API_KEY", os.getenv("TENANT_A_API_KEY", "tenant-a-dev-key"))
 
 
 def main() -> int:
@@ -28,6 +30,7 @@ def main() -> int:
     print(
         "Smoke test failed:",
         {
+            "base_url": BASE_URL,
             "health": health.status_code,
             "metrics": metrics.status_code,
             "ingest": ingest.status_code,

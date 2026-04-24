@@ -19,7 +19,7 @@ down:
 	docker compose -f $(COMPOSE_FILE) down
 
 eval:
-	GENERATOR_BACKEND=extractive $(PYTHON) scripts/evaluate.py --local-path artifacts/qdrant_eval
+	EMBEDDING_BACKEND=hash GENERATOR_BACKEND=extractive $(PYTHON) scripts/evaluate.py --local-path artifacts/qdrant_eval
 
 build:
 	docker build -f deploy/docker/Dockerfile -t citeshield-api:local .

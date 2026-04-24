@@ -1,6 +1,7 @@
 # Limitations
 
-- Prototype-level auth based on static API keys.
-- No managed identity provider integration yet.
-- No out-of-the-box distributed tracing collector.
-- Kubernetes manifests are templates; production storage, TLS, and backup policies must be hardened.
+- This is a **prototype**, not a production deployment.
+- Auth is static API-key based (no OIDC/IAM integration yet).
+- No service mesh/mTLS by default.
+- Default local performance is optimized for reproducibility, not scale.
+- Production operations still require hardening: backup/restore, secret manager integration, policy enforcement, and SLO-driven scaling.

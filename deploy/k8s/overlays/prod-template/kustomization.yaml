@@ -1,6 +1,5 @@
 resources:
   - ../../base
-  - secret.template.yaml
 images:
   - name: ghcr.io/anjali-khantaal/citeshield-api
     newTag: v0.1.0
