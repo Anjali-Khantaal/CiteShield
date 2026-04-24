@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: citeshield-app-config
+  namespace: rag-app
+data:
+  APP_NAME: CiteShield
+  EMBEDDING_MODEL_NAME: sentence-transformers/all-MiniLM-L6-v2
+  EMBEDDING_BATCH_SIZE: "32"
+  EMBEDDING_MODEL_CACHE_DIR: /models
+  EMBEDDING_VECTOR_SIZE: "384"
+  CHUNK_SIZE_CHARS: "700"
+  RETRIEVAL_TOP_K: "3"
+  GENERATOR_BACKEND: extractive
+  GEMINI_MODEL_NAME: gemini-2.5-flash
+  FEATURE_STRICT_GROUNDING: "true"
+  QDRANT_HOST: citeshield-qdrant.vector-db.svc.cluster.local
+  QDRANT_HTTP_PORT: "6333"
+  QDRANT_GRPC_PORT: "6334"
+  QDRANT_COLLECTION_NAME: documents

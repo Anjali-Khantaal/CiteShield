@@ -42,6 +42,7 @@ def get_qdrant_client(settings: Settings | None = None) -> QdrantClient:
 
     return QdrantClient(
         url=settings.qdrant_url,
+        api_key=settings.qdrant_api_key,
         grpc_port=settings.qdrant_grpc_port,
         prefer_grpc=settings.qdrant_prefer_grpc,
         timeout=settings.qdrant_timeout_seconds,

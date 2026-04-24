@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     gemini_temperature: float = 0.0
     gemini_max_output_tokens: int = 300
     gemini_timeout_seconds: int = 30
+    openai_compatible_base_url: str = "http://127.0.0.1:8001/v1"
+    openai_compatible_model: str = "meta-llama/Llama-3.1-8B-Instruct"
+    openai_compatible_api_key: str | None = None
+    mlflow_tracking_uri: str | None = None
     feature_strict_grounding: bool = True
     frontend_allowed_origins_raw: str = (
         "http://localhost:5173,"
@@ -38,6 +42,7 @@ class Settings(BaseSettings):
     qdrant_prefer_grpc: bool = False
     qdrant_timeout_seconds: int = 10
     qdrant_local_path: str | None = None
+    qdrant_api_key: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

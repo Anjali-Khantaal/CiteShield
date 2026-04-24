@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -12,7 +12,7 @@ RUN pip install --upgrade pip \
     && pip install \
         --index-url https://download.pytorch.org/whl/cpu \
         --extra-index-url https://pypi.org/simple \
-        torch==2.11.0 \
+        torch==2.5.1 \
     && pip install -r requirements.txt
 
 COPY app ./app

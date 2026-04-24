@@ -1,0 +1,22 @@
+{
+  "title": "CiteShield Platform Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Request Rate",
+      "targets": [{"expr": "sum(rate(rag_requests_total[5m]))"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "P95 HTTP Latency",
+      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(rag_request_latency_seconds_bucket[5m])) by (le))"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "Retrieval Errors",
+      "targets": [{"expr": "sum(rate(rag_retrieval_errors_total[5m]))"}]
+    }
+  ]
+}
