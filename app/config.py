@@ -74,6 +74,8 @@ class Settings(BaseSettings):
         normalized = str(value).strip()
         if not normalized or normalized in _PLACEHOLDER_SENTINELS:
             return None
+        if normalized.startswith("<") and normalized.endswith(">"):
+            return None
         return normalized
 
     @property

@@ -29,7 +29,12 @@ Use only:
 - `deploy/k8s/overlays/local/`
 - `deploy/k8s/overlays/prod-template/`
 
-Production secrets must be created out-of-band (not from committed placeholder manifests).
+Notes:
+- Local overlay uses `EMBEDDING_BACKEND=hash` to keep smoke tests offline-safe.
+- Base/prod templates can use `sentence_transformers`.
+- NetworkPolicy explicitly allows DNS egress for service discovery.
+- HPA behavior depends on cluster metrics pipeline (typically `metrics-server`).
+- Production secrets must be created out-of-band (not from committed placeholder manifests).
 
 ## Security note
 Never commit a real `.env`, API key, password, or token.

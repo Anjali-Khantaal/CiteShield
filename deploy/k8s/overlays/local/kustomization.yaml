@@ -10,3 +10,12 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/image
         value: citeshield-api:local
+
+  - target:
+      kind: ConfigMap
+      name: citeshield-app-config
+      namespace: rag-app
+    patch: |-
+      - op: replace
+        path: /data/EMBEDDING_BACKEND
+        value: hash
