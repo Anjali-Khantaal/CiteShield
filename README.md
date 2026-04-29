@@ -94,9 +94,6 @@ Notes:
 - HPA behavior depends on cluster metrics pipeline (typically `metrics-server`).
 - Production secrets must be created out-of-band (not from committed placeholder manifests).
 
-## Security note
-Never commit a real `.env`, API key, password, or token.
-
 ## Make targets
 - `make setup`
 - `make test`
@@ -106,25 +103,3 @@ Never commit a real `.env`, API key, password, or token.
 - `make k8s-deploy`
 - `make k8s-smoke`
 - `make k8s-clean`
-
-## Validation checklist
-
-The project is designed so the following checks can be run without private keys or paid APIs:
-
-```bash
-python -m pytest -q
-make eval
-python scripts/run_benchmark.py
-docker compose -f deploy/docker/compose.yaml config
-kubectl kustomize deploy/k8s/overlays/local
-kubectl kustomize deploy/k8s/overlays/prod-template
-```
-
-## Ops and platform docs
-- [Kubernetes quickstart](docs/kubernetes_quickstart.md)
-- [Operations runbook](docs/operations_runbook.md)
-- [Observability](docs/observability.md)
-- [Manual configuration](docs/manual_configuration.md)
-- [Limitations](docs/limitations.md)
-- [CERN alignment](docs/cern_alignment.md)
-- [Benchmark report](docs/benchmark_report.md)
