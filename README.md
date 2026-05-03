@@ -299,7 +299,7 @@ kubectl kustomize deploy/k8s/overlays/prod-template
 
 Captured test output is included in `docs/assets/pytest-output.txt`.
 
-## Documentation
+## Points to Note
 
 - [Local quickstart](docs/local_quickstart.md)
 - [Observability](docs/observability.md)
