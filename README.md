@@ -13,7 +13,8 @@ The aim of this project is to create a platform surface around RAG: isolation, r
 - **Generation:** extractive local generator by default, with optional Gemini or OpenAI-compatible generation.
 - **Tracing:** JSONL query traces by default, optional MLflow emission.
 - **Deployment:** Docker Compose for local service mode, Kustomize overlays for Kubernetes.
-- **Validation:** pytest, smoke tests, offline evaluation, benchmark script, Kubernetes render checks.
+- **CI/CD:** GitHub Actions runs tests, verifies the Docker build, and validates Kubernetes manifests.
+- **Validation:** smoke tests, offline evaluation, benchmark script, and local render checks.
 
 ## Console Flow
 
@@ -268,6 +269,18 @@ make k8s-smoke
 ```
 
 The local overlay uses hash embeddings for offline-safe validation. Production secrets must be created out of band; do not commit real `.env` files, API keys, tokens, or passwords.
+
+## CI/CD
+
+GitHub Actions is configured in `.github/workflows/ci.yaml`.
+
+On every push and pull request, CI runs:
+
+- `python -m pytest -q` with offline hash embeddings and the extractive generator.
+- A Docker image build from `deploy/docker/Dockerfile`.
+- Kustomize validation for the local and production-template Kubernetes overlays.
+
+The workflow validates build and deployment readiness. It does not push an image or deploy to a live cluster yet; the Kubernetes manifests and Make targets provide the deployment path.
 
 ## Verification
 
