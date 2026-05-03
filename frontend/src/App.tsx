@@ -12,6 +12,7 @@ import {
   deleteDocument,
   getDocumentInventory,
   getHealth,
+  getMediaBlob,
   getTenantContext,
   ingestDocument,
   queryDocuments,
@@ -96,6 +97,13 @@ function inferTenantFromApiKey(apiKey: string): string | null {
   return null;
 }
 
+function getCitationMediaLabel(citation: CitationResponse): string {
+  if (!citation.modality) {
+    return "Text";
+  }
+  return citation.modality.charAt(0).toUpperCase() + citation.modality.slice(1);
+}
+
 function App() {
   const [activeTab, setActiveTab] = useState<TabKey>("workflow");
 
@@ -131,6 +139,10 @@ function App() {
   const [documentsNotice, setDocumentsNotice] = useState<string | null>(null);
   const [documentsLoading, setDocumentsLoading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const activeTenantId =
+    sessionContext?.role === "tenant" && sessionContext.tenant_id
+      ? sessionContext.tenant_id
+      : inferTenantFromApiKey(apiKey);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEYS.apiBaseUrl, apiBaseUrl);
@@ -807,6 +819,9 @@ function App() {
                       <CitationItem
                         key={`${citation.source}:${citation.chunk_id}`}
                         citation={citation}
+                        apiBaseUrl={apiBaseUrl}
+                        apiKey={apiKey.trim()}
+                        tenantId={activeTenantId}
                       />
                     ))}
                   </ul>
@@ -1000,11 +1015,73 @@ function ExampleQuestionList({ questions, onSelect }: ExampleQuestionListProps) 
   );
 }
 
-function CitationItem({ citation }: { citation: CitationResponse }) {
+function CitationItem({
+  citation,
+  apiBaseUrl,
+  apiKey,
+  tenantId,
+}: {
+  citation: CitationResponse;
+  apiBaseUrl: string;
+  apiKey: string;
+  tenantId: string | null;
+}) {
+  const [mediaUrl, setMediaUrl] = useState<string | null>(null);
+  const [mediaError, setMediaError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!citation.media_path || !citation.modality || !tenantId || !apiKey) {
+      setMediaUrl(null);
+      setMediaError(null);
+      return;
+    }
+
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    setMediaError(null);
+
+    void getMediaBlob(apiBaseUrl, apiKey, tenantId, citation.media_path)
+      .then((blob) => {
+        if (cancelled) {
+          return;
+        }
+        objectUrl = URL.createObjectURL(blob);
+        setMediaUrl(objectUrl);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setMediaUrl(null);
+          setMediaError(formatApiError(error));
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [apiBaseUrl, apiKey, citation.media_path, citation.modality, tenantId]);
+
   return (
     <li className="citation-item">
-      <strong>{citation.source}</strong>
+      <div className="citation-heading">
+        <strong>{citation.source}</strong>
+        <span className="modality-chip">{getCitationMediaLabel(citation)}</span>
+      </div>
       <span>Chunk {citation.chunk_id + 1}</span>
+      {citation.media_path ? <span>Media: {citation.media_path}</span> : null}
+      {citation.source_url ? <span>Source: {citation.source_url}</span> : null}
+      {mediaError ? <p className="media-error">{mediaError}</p> : null}
+      {mediaUrl && citation.modality === "image" ? (
+        <img className="citation-media citation-media-image" src={mediaUrl} alt={citation.source} />
+      ) : null}
+      {mediaUrl && citation.modality === "audio" ? (
+        <audio className="citation-media" controls src={mediaUrl} />
+      ) : null}
+      {mediaUrl && citation.modality === "video" ? (
+        <video className="citation-media" controls src={mediaUrl} />
+      ) : null}
     </li>
   );
 }

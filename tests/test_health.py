@@ -16,6 +16,8 @@ class FailingClient:
 
 
 def test_health_returns_ok() -> None:
+    settings = get_settings().model_copy(update={"generator_backend": "extractive"})
+    app.dependency_overrides[get_health_settings] = lambda: settings
     app.dependency_overrides[get_health_client] = lambda: HealthyClient()
 
     try:
@@ -32,6 +34,8 @@ def test_health_returns_ok() -> None:
 
 
 def test_health_returns_degraded_when_qdrant_is_unavailable() -> None:
+    settings = get_settings().model_copy(update={"generator_backend": "extractive"})
+    app.dependency_overrides[get_health_settings] = lambda: settings
     app.dependency_overrides[get_health_client] = lambda: FailingClient()
 
     try:

@@ -19,6 +19,11 @@ export type IngestResponse = {
 export type CitationResponse = {
   source: string;
   chunk_id: number;
+  modality?: "image" | "audio" | "video" | string;
+  media_path?: string;
+  source_url?: string;
+  time_range?: string;
+  frame_time?: string;
 };
 
 export type QueryResponse = {
@@ -162,4 +167,29 @@ export function queryDocuments(
     apiKey,
     body: payload,
   });
+}
+
+export async function getMediaBlob(
+  apiBaseUrl: string,
+  apiKey: string,
+  tenantId: string,
+  mediaPath: string,
+): Promise<Blob> {
+  const response = await fetch(
+    `${normalizeBaseUrl(apiBaseUrl)}/media/${encodeURIComponent(tenantId)}/${mediaPath
+      .split("/")
+      .map((part) => encodeURIComponent(part))
+      .join("/")}`,
+    {
+      headers: {
+        "X-API-Key": apiKey,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new ApiError(response.statusText || "Media request failed.", response.status);
+  }
+
+  return response.blob();
 }

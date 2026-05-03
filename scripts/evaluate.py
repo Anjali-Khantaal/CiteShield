@@ -11,7 +11,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import Settings, get_settings
-from app.tracing import LifecycleTracker
+from app.metrics import record_evaluation_summary
+from app.tracing import LifecycleTracker, generator_model_name
 from app.services.embeddings import EmbeddingService, get_embedding_service
 from app.services.generator import AnswerGenerator, generate_answer, get_answer_generator
 from app.services.ingestion import ingest_documents
@@ -232,6 +233,10 @@ def summarize_results(results: list[EvaluationResult], *, cases: list[Evaluation
     case_by_id = {case.case_id: case for case in cases}
     positive_results = [result for result in results if not case_by_id[result.case_id].expect_abstain]
     negative_results = [result for result in results if case_by_id[result.case_id].expect_abstain]
+    cross_tenant_failures = sum(
+        (not result.answer_abstained) or bool(result.citation_sources)
+        for result in negative_results
+    )
 
     return {
         "cases_total": len(results),
@@ -254,6 +259,7 @@ def summarize_results(results: list[EvaluationResult], *, cases: list[Evaluation
             sum(result.citation_present for result in positive_results),
             len(positive_results),
         ),
+        "cross_tenant_eval_failures": cross_tenant_failures,
         "average_latency_ms": round(
             sum(result.latency_ms for result in results) / len(results),
             2,
@@ -328,12 +334,21 @@ def main() -> None:
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    tracker = LifecycleTracker(tracking_uri=settings.mlflow_tracking_uri)
+    tracker = LifecycleTracker(
+        tracking_uri=settings.mlflow_tracking_uri,
+        jsonl_path=settings.lifecycle_tracking_path,
+    )
+    model_name = generator_model_name(
+        generator_backend=settings.generator_backend,
+        gemini_model_name=settings.gemini_model_name,
+        openai_compatible_model=settings.openai_compatible_model,
+    )
     tracker.log_evaluation_run(
         params={
+            "embedding_backend": settings.embedding_backend,
             "embedding_model_name": settings.embedding_model_name,
             "generator_backend": settings.generator_backend,
-            "generator_model_name": settings.gemini_model_name if settings.generator_backend == "gemini" else settings.openai_compatible_model if settings.generator_backend == "openai_compatible" else "extractive",
+            "generator_model_name": model_name,
             "retrieval_top_k": settings.retrieval_top_k,
             "chunk_size_chars": settings.chunk_size_chars,
         },
@@ -343,7 +358,18 @@ def main() -> None:
             "citation_hit_rate_positive": summary["citation_hit_rate_positive"],
             "abstain_rate_negative": summary["abstain_rate_negative"],
             "average_latency_ms": summary["average_latency_ms"],
+            "cross_tenant_eval_failures": summary["cross_tenant_eval_failures"],
         },
+        artifacts={
+            "evaluation_results": str(output_path),
+            "evaluation_summary": str(summary_path),
+        },
+    )
+    record_evaluation_summary(
+        retrieval_hit_rate=float(summary["retrieval_hit_rate_positive"]),
+        citation_hit_rate=float(summary["citation_hit_rate_positive"]),
+        abstention_rate_negative=float(summary["abstain_rate_negative"]),
+        cross_tenant_failures=int(summary["cross_tenant_eval_failures"]),
     )
 
     print("Evaluation complete")

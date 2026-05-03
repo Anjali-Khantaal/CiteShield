@@ -1,0 +1,7 @@
+{
+  "attribution": "CiteShield synthetic dataset",
+  "license": "Generated prototype sample for CiteShield",
+  "media_path": "media/audio/remote_work_briefing.wav",
+  "modality": "audio",
+  "source_url": "generated://citeshield/tenant-a-remote-work-briefing"
+}

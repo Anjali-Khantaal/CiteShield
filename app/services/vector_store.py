@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import lru_cache
 from uuid import NAMESPACE_URL, uuid5
 
 from qdrant_client import QdrantClient, models
@@ -12,6 +13,13 @@ CHUNK_ID_FIELD = "chunk_id"
 SOURCE_FIELD = "source"
 TEXT_FIELD = "text"
 LINE_RANGE_FIELD = "line_range"
+MODALITY_FIELD = "modality"
+MEDIA_PATH_FIELD = "media_path"
+SOURCE_URL_FIELD = "source_url"
+LICENSE_FIELD = "license"
+ATTRIBUTION_FIELD = "attribution"
+TIME_RANGE_FIELD = "time_range"
+FRAME_TIME_FIELD = "frame_time"
 SUPPORTED_CHUNK_PAYLOAD_FIELDS = (
     TENANT_ID_FIELD,
     DOC_ID_FIELD,
@@ -20,6 +28,13 @@ SUPPORTED_CHUNK_PAYLOAD_FIELDS = (
     TEXT_FIELD,
     "page",
     LINE_RANGE_FIELD,
+    MODALITY_FIELD,
+    MEDIA_PATH_FIELD,
+    SOURCE_URL_FIELD,
+    LICENSE_FIELD,
+    ATTRIBUTION_FIELD,
+    TIME_RANGE_FIELD,
+    FRAME_TIME_FIELD,
 )
 
 
@@ -35,17 +50,43 @@ def get_qdrant_client(settings: Settings | None = None) -> QdrantClient:
     settings = settings or get_settings()
 
     if settings.qdrant_local_path:
-        return QdrantClient(
+        return _get_local_qdrant_client(
             path=settings.qdrant_local_path,
-            timeout=settings.qdrant_timeout_seconds,
+            timeout_seconds=settings.qdrant_timeout_seconds,
         )
 
-    return QdrantClient(
+    return _get_remote_qdrant_client(
         url=settings.qdrant_url,
         api_key=settings.qdrant_api_key,
         grpc_port=settings.qdrant_grpc_port,
         prefer_grpc=settings.qdrant_prefer_grpc,
-        timeout=settings.qdrant_timeout_seconds,
+        timeout_seconds=settings.qdrant_timeout_seconds,
+    )
+
+
+@lru_cache
+def _get_local_qdrant_client(*, path: str, timeout_seconds: int) -> QdrantClient:
+    return QdrantClient(
+        path=path,
+        timeout=timeout_seconds,
+    )
+
+
+@lru_cache
+def _get_remote_qdrant_client(
+    *,
+    url: str,
+    api_key: str | None,
+    grpc_port: int,
+    prefer_grpc: bool,
+    timeout_seconds: int,
+) -> QdrantClient:
+    return QdrantClient(
+        url=url,
+        api_key=api_key,
+        grpc_port=grpc_port,
+        prefer_grpc=prefer_grpc,
+        timeout=timeout_seconds,
     )
 
 
@@ -100,21 +141,36 @@ def replace_document_chunks(
         wait=True,
     )
 
-    points = [
-        models.PointStruct(
-            id=_build_point_id(tenant_id=tenant_id, doc_id=doc_id, chunk_id=chunk.chunk_id),
-            vector=vector,
-            payload={
-                TENANT_ID_FIELD: tenant_id,
-                DOC_ID_FIELD: doc_id,
-                CHUNK_ID_FIELD: chunk.chunk_id,
-                SOURCE_FIELD: source,
-                TEXT_FIELD: chunk.text,
-                LINE_RANGE_FIELD: chunk.line_range,
-            },
+    points = []
+    for chunk, vector in zip(chunks, vectors, strict=True):
+        payload = {
+            TENANT_ID_FIELD: tenant_id,
+            DOC_ID_FIELD: doc_id,
+            CHUNK_ID_FIELD: chunk.chunk_id,
+            SOURCE_FIELD: source,
+            TEXT_FIELD: chunk.text,
+            LINE_RANGE_FIELD: chunk.line_range,
+        }
+        for field_name in (
+            MODALITY_FIELD,
+            MEDIA_PATH_FIELD,
+            SOURCE_URL_FIELD,
+            LICENSE_FIELD,
+            ATTRIBUTION_FIELD,
+            TIME_RANGE_FIELD,
+            FRAME_TIME_FIELD,
+        ):
+            value = chunk.metadata.get(field_name)
+            if value:
+                payload[field_name] = value
+
+        points.append(
+            models.PointStruct(
+                id=_build_point_id(tenant_id=tenant_id, doc_id=doc_id, chunk_id=chunk.chunk_id),
+                vector=vector,
+                payload=payload,
+            )
         )
-        for chunk, vector in zip(chunks, vectors, strict=True)
-    ]
 
     if points:
         client.upsert(

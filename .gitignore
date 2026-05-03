@@ -6,7 +6,12 @@ __pycache__/
 *.pyc
 .env
 .qdrant_storage/
-artifacts/
+artifacts/*
+!artifacts/benchmark_summary.json
+mlruns/
 condaenv.*.requirements.txt
 frontend/node_modules/
 frontend/dist/
+data/**/media/*
+!data/**/media/**/
+!data/**/media/**/.gitkeep

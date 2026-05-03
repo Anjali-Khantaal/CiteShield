@@ -761,6 +761,46 @@ code {
   margin-top: 0.25rem;
 }
 
+.citation-heading {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.65rem;
+  justify-content: space-between;
+}
+
+.modality-chip {
+  background: rgba(31, 78, 121, 0.12);
+  border: 1px solid rgba(31, 78, 121, 0.18);
+  border-radius: 999px;
+  color: var(--accent);
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 0;
+  padding: 0.35rem 0.5rem;
+}
+
+.citation-media {
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  display: block;
+  margin-top: 0.75rem;
+  max-width: 100%;
+  width: 100%;
+}
+
+.citation-media-image {
+  aspect-ratio: 14 / 9;
+  object-fit: contain;
+}
+
+.media-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  margin: 0.55rem 0 0;
+}
+
 .feedback {
   border-radius: 1rem;
   margin: 1rem 0 0;

@@ -57,8 +57,37 @@ class IngestResponse(BaseModel):
 class CitationResponse(BaseModel):
     source: str
     chunk_id: int
+    modality: str | None = None
+    media_path: str | None = None
+    source_url: str | None = None
+    time_range: str | None = None
+    frame_time: str | None = None
 
 
 class QueryResponse(BaseModel):
     answer: str
     citations: list[CitationResponse]
+
+
+class AgentQueryRequest(QueryRequest):
+    include_diagnostics: bool = True
+
+
+class AgentToolTrace(BaseModel):
+    tool: str
+    summary: str
+
+
+class RetrievalDiagnosticResponse(BaseModel):
+    top_k: int
+    retrieved_count: int
+    retrieved_sources: list[str]
+    max_score: float | None = None
+    min_score: float | None = None
+    abstained: bool
+
+
+class AgentQueryResponse(QueryResponse):
+    tenant_id: str
+    tools_used: list[AgentToolTrace]
+    diagnostics: RetrievalDiagnosticResponse | None = None

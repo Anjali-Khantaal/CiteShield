@@ -18,6 +18,10 @@ rag_generation_latency_seconds = Histogram("rag_generation_latency_seconds", "Ge
 rag_qdrant_latency_seconds = Histogram("rag_qdrant_latency_seconds", "Qdrant operation latency.", ("operation",))
 rag_abstentions_total = Counter("rag_abstentions_total", "Total abstained answers.", ("route",))
 rag_citations_total = Counter("rag_citations_total", "Total citations returned by query responses.", ("route",))
+rag_answer_abstentions_total = Counter("rag_answer_abstentions_total", "Total abstained answers using the prompt-requested metric name.", ("route",))
+rag_citation_count = Gauge("rag_citation_count", "Citation count observed on the latest query response.", ("route",))
+rag_query_top_k = Gauge("rag_query_top_k", "Requested top_k observed on the latest query.", ("route",))
+rag_cross_tenant_eval_failures_total = Counter("rag_cross_tenant_eval_failures_total", "Cross-tenant evaluation failures observed by evaluation runs.")
 rag_evaluation_runs_total = Counter("rag_evaluation_runs_total", "Total evaluation runs recorded.")
 rag_evaluation_retrieval_hit_rate = Gauge("rag_evaluation_retrieval_hit_rate", "Latest evaluation retrieval hit rate.")
 rag_evaluation_citation_hit_rate = Gauge("rag_evaluation_citation_hit_rate", "Latest evaluation citation hit rate.")
@@ -56,23 +60,27 @@ def record_retrieval_error(*, route: str, method: str, status_code: int | str) -
     rag_retrieval_errors_total.labels(route=route, method=method, status_code=str(status_code)).inc()
 
 
-def record_query_profile(*, route: str, retrieval_seconds: float, generation_seconds: float, backend: str, citation_count: int, abstained: bool) -> None:
+def record_query_profile(*, route: str, retrieval_seconds: float, generation_seconds: float, backend: str, citation_count: int, abstained: bool, top_k: int) -> None:
     rag_retrieval_latency_seconds.labels(route=route).observe(retrieval_seconds)
     rag_generation_latency_seconds.labels(route=route, backend=backend).observe(generation_seconds)
     rag_citations_total.labels(route=route).inc(citation_count)
+    rag_citation_count.labels(route=route).set(citation_count)
+    rag_query_top_k.labels(route=route).set(top_k)
     if abstained:
         rag_abstentions_total.labels(route=route).inc()
+        rag_answer_abstentions_total.labels(route=route).inc()
 
 
 def record_qdrant_latency(*, operation: str, latency_seconds: float) -> None:
     rag_qdrant_latency_seconds.labels(operation=operation).observe(latency_seconds)
 
 
-def record_evaluation_summary(*, retrieval_hit_rate: float, citation_hit_rate: float, abstention_rate_negative: float) -> None:
+def record_evaluation_summary(*, retrieval_hit_rate: float, citation_hit_rate: float, abstention_rate_negative: float, cross_tenant_failures: int = 0) -> None:
     rag_evaluation_runs_total.inc()
     rag_evaluation_retrieval_hit_rate.set(retrieval_hit_rate)
     rag_evaluation_citation_hit_rate.set(citation_hit_rate)
     rag_evaluation_abstention_rate_negative.set(abstention_rate_negative)
+    rag_cross_tenant_eval_failures_total.inc(cross_tenant_failures)
 
 
 def refresh_indexed_chunks(*, client: QdrantClient, collection_name: str) -> None:

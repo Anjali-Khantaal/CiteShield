@@ -1,7 +1,8 @@
 from fastapi.testclient import TestClient
 
+from app.config import get_settings
 from app.main import app
-from app.routes.health import get_health_client
+from app.routes.health import get_health_client, get_health_settings
 
 
 class HealthyClient:
@@ -10,6 +11,8 @@ class HealthyClient:
 
 
 def test_health_allows_local_frontend_origin() -> None:
+    settings = get_settings().model_copy(update={"generator_backend": "extractive"})
+    app.dependency_overrides[get_health_settings] = lambda: settings
     app.dependency_overrides[get_health_client] = lambda: HealthyClient()
 
     try:
@@ -22,4 +25,3 @@ def test_health_allows_local_frontend_origin() -> None:
 
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
-

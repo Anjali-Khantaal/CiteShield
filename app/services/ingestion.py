@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import re
 from typing import Protocol
@@ -30,6 +31,7 @@ class SourceDocument:
     doc_id: str
     source: str
     text: str
+    metadata: dict[str, str | None]
 
 
 @dataclass(frozen=True)
@@ -72,6 +74,7 @@ def load_source_documents(data_root: Path) -> list[SourceDocument]:
                     doc_id=doc_id,
                     source=relative_source,
                     text=text,
+                    metadata=_load_source_metadata(source_path),
                 )
             )
 
@@ -98,7 +101,10 @@ def ingest_documents(
     total_chunks = 0
 
     for document in documents:
-        chunks = chunk_text(document.text, max_chars=settings.chunk_size_chars)
+        chunks = _attach_metadata(
+            chunk_text(document.text, max_chars=settings.chunk_size_chars),
+            document.metadata,
+        )
         vectors = embedder.embed_texts([chunk.text for chunk in chunks])
 
         replace_document_chunks(
@@ -192,3 +198,43 @@ def _derive_doc_id(source: str) -> str:
     stem = Path(source).stem.strip().lower()
     normalized = re.sub(r"[^a-z0-9_-]+", "_", stem).strip("_")
     return normalized or "document"
+
+
+def _load_source_metadata(source_path: Path) -> dict[str, str | None]:
+    metadata_path = source_path.with_suffix(".metadata.json")
+    if not metadata_path.exists():
+        return {}
+
+    payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Metadata sidecar must be an object: {metadata_path}")
+
+    supported_keys = {
+        "modality",
+        "media_path",
+        "source_url",
+        "license",
+        "attribution",
+        "time_range",
+        "frame_time",
+    }
+    return {
+        key: str(value)
+        for key, value in payload.items()
+        if key in supported_keys and value is not None and str(value).strip()
+    }
+
+
+def _attach_metadata(chunks: list[TextChunk], metadata: dict[str, str | None]) -> list[TextChunk]:
+    if not metadata:
+        return chunks
+
+    return [
+        TextChunk(
+            chunk_id=chunk.chunk_id,
+            text=chunk.text,
+            line_range=chunk.line_range,
+            metadata=metadata,
+        )
+        for chunk in chunks
+    ]

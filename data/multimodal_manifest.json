@@ -1,0 +1,37 @@
+{
+  "items": [
+    {
+      "tenant_id": "tenant_a",
+      "source_url": "generated://citeshield/tenant-a-security-poster",
+      "local_path": "data/tenant_a/media/images/security_access_poster.png",
+      "modality": "image",
+      "title": "Tenant A Security Access Poster",
+      "license": "Generated prototype sample for CiteShield",
+      "attribution": "CiteShield synthetic dataset",
+      "sample_text": "Approved production access requires MFA, a managed device, and an active ticket referencing the change window. Never send API keys over chat. Store secrets in the company vault and rotate exposed credentials immediately.",
+      "expected_terms": ["MFA", "API keys", "vault"]
+    },
+    {
+      "tenant_id": "tenant_a",
+      "source_url": "generated://citeshield/tenant-a-remote-work-briefing",
+      "local_path": "data/tenant_a/media/audio/remote_work_briefing.wav",
+      "modality": "audio",
+      "title": "Tenant A Remote Work Audio Briefing",
+      "license": "Generated prototype sample for CiteShield",
+      "attribution": "CiteShield synthetic dataset",
+      "sample_text": "When handling customer data outside the office, Tenant A employees must connect through the corporate VPN before opening internal dashboards or ticketing systems. Company laptops must use full disk encryption and screen lock after ten minutes.",
+      "expected_terms": ["customer data", "VPN", "screen lock"]
+    },
+    {
+      "tenant_id": "tenant_b",
+      "source_url": "generated://citeshield/tenant-b-support-escalation-video",
+      "local_path": "data/tenant_b/media/video/support_escalation_briefing.mp4",
+      "modality": "video",
+      "title": "Tenant B Support Escalation Video",
+      "license": "Generated prototype sample for CiteShield",
+      "attribution": "CiteShield synthetic dataset",
+      "sample_text": "Tenant B support agents must acknowledge severity one incidents within fifteen minutes and provide updates every thirty minutes until mitigation is in place. Data export escalations should be routed to the platform support queue.",
+      "expected_terms": ["severity one", "thirty minutes", "platform support"]
+    }
+  ]
+}

@@ -36,6 +36,13 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
+              kubernetes.io/metadata.name: rag-app
+      ports:
+        - protocol: TCP
+          port: 8000
+    - from:
+        - namespaceSelector:
+            matchLabels:
               kubernetes.io/metadata.name: monitoring
       ports:
         - protocol: TCP
@@ -63,4 +70,3 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-

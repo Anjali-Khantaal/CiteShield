@@ -1,0 +1,7 @@
+{
+  "attribution": "CiteShield synthetic dataset",
+  "license": "Generated prototype sample for CiteShield",
+  "media_path": "media/images/security_access_poster.png",
+  "modality": "image",
+  "source_url": "generated://citeshield/tenant-a-security-poster"
+}

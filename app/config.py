@@ -28,8 +28,10 @@ class Settings(BaseSettings):
     generator_min_score_threshold: float = 0.15
     generator_min_term_overlap: int = 2
     generator_max_sentences: int = 2
+    generator_enable_fallback: bool = True
     gemini_api_key: str | None = None
     gemini_model_name: str = "gemini-2.5-flash"
+    gemini_fallback_model_names_raw: str = "gemini-2.5-flash-lite"
     gemini_temperature: float = 0.0
     gemini_max_output_tokens: int = 300
     gemini_timeout_seconds: int = 30
@@ -37,10 +39,14 @@ class Settings(BaseSettings):
     openai_compatible_model: str = "meta-llama/Llama-3.1-8B-Instruct"
     openai_compatible_api_key: str | None = None
     mlflow_tracking_uri: str | None = None
+    lifecycle_tracking_path: str = "artifacts/lifecycle_runs.jsonl"
     feature_strict_grounding: bool = True
+    data_root: str = "data"
     frontend_allowed_origins_raw: str = (
         "http://localhost:5173,"
         "http://127.0.0.1:5173,"
+        "http://localhost:5174,"
+        "http://127.0.0.1:5174,"
         "http://localhost:4173,"
         "http://127.0.0.1:4173"
     )
@@ -88,6 +94,14 @@ class Settings(BaseSettings):
             origin.strip()
             for origin in self.frontend_allowed_origins_raw.split(",")
             if origin.strip()
+        ]
+
+    @property
+    def gemini_fallback_model_names(self) -> list[str]:
+        return [
+            model.strip()
+            for model in self.gemini_fallback_model_names_raw.split(",")
+            if model.strip()
         ]
 
 

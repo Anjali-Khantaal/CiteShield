@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -6,6 +6,7 @@ class TextChunk:
     chunk_id: int
     text: str
     line_range: str
+    metadata: dict[str, str | None] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

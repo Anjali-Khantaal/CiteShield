@@ -1,0 +1,398 @@
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 0.0
+python_gc_objects_collected_total{generation="1"} 6586.0
+python_gc_objects_collected_total{generation="2"} 0.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 0.0
+python_gc_collections_total{generation="1"} 39.0
+python_gc_collections_total{generation="2"} 0.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="14",patchlevel="4",version="3.14.4"} 1.0
+# HELP rag_requests_total Total HTTP requests handled by CiteShield.
+# TYPE rag_requests_total counter
+rag_requests_total{method="GET",route="/health",status_code="200"} 9.0
+rag_requests_total{method="GET",route="/metrics",status_code="200"} 2.0
+rag_requests_total{method="POST",route="/ingest",status_code="200"} 2.0
+rag_requests_total{method="POST",route="/agent/query",status_code="200"} 2.0
+rag_requests_total{method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_requests_total{method="POST",route="/query",status_code="200"} 4.0
+rag_requests_total{method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_requests_total{method="GET",route="/whoami",status_code="200"} 4.0
+rag_requests_total{method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_requests_total{method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+# HELP rag_requests_created Total HTTP requests handled by CiteShield.
+# TYPE rag_requests_created gauge
+rag_requests_created{method="GET",route="/health",status_code="200"} 1.777786662321781e+09
+rag_requests_created{method="GET",route="/metrics",status_code="200"} 1.777786663460995e+09
+rag_requests_created{method="POST",route="/ingest",status_code="200"} 1.77778667926769e+09
+rag_requests_created{method="POST",route="/agent/query",status_code="200"} 1.77778669664011e+09
+rag_requests_created{method="GET",route="/admin/documents",status_code="200"} 1.777786697408768e+09
+rag_requests_created{method="POST",route="/query",status_code="200"} 1.777786707962178e+09
+rag_requests_created{method="OPTIONS",route="/whoami",status_code="200"} 1.777786920447982e+09
+rag_requests_created{method="GET",route="/whoami",status_code="200"} 1.7777869204577239e+09
+rag_requests_created{method="OPTIONS",route="/query",status_code="200"} 1.777786921825145e+09
+rag_requests_created{method="OPTIONS",route="/admin/documents",status_code="200"} 1.777786923207937e+09
+# HELP rag_ingest_total Total successful ingest requests handled by CiteShield.
+# TYPE rag_ingest_total counter
+rag_ingest_total{method="POST",route="/ingest",status_code="200"} 2.0
+# HELP rag_ingest_created Total successful ingest requests handled by CiteShield.
+# TYPE rag_ingest_created gauge
+rag_ingest_created{method="POST",route="/ingest",status_code="200"} 1.777786679266044e+09
+# HELP rag_retrieval_errors_total Total retrieval errors raised while serving query requests.
+# TYPE rag_retrieval_errors_total counter
+# HELP rag_request_latency_seconds HTTP request latency for CiteShield endpoints.
+# TYPE rag_request_latency_seconds histogram
+rag_request_latency_seconds_bucket{le="0.005",method="GET",route="/health",status_code="200"} 6.0
+rag_request_latency_seconds_bucket{le="0.01",method="GET",route="/health",status_code="200"} 7.0
+rag_request_latency_seconds_bucket{le="0.025",method="GET",route="/health",status_code="200"} 8.0
+rag_request_latency_seconds_bucket{le="0.05",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="0.075",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="0.1",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="0.25",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="0.5",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="0.75",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="1.0",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="2.5",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="5.0",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="7.5",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="10.0",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_bucket{le="+Inf",method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_count{method="GET",route="/health",status_code="200"} 9.0
+rag_request_latency_seconds_sum{method="GET",route="/health",status_code="200"} 0.05863816599958227
+rag_request_latency_seconds_bucket{le="0.005",method="GET",route="/metrics",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.01",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.025",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.05",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.075",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.1",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.25",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.5",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.75",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="1.0",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="2.5",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="5.0",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="7.5",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="10.0",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="+Inf",method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_count{method="GET",route="/metrics",status_code="200"} 2.0
+rag_request_latency_seconds_sum{method="GET",route="/metrics",status_code="200"} 0.010073498999190633
+rag_request_latency_seconds_bucket{le="0.005",method="POST",route="/ingest",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.01",method="POST",route="/ingest",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.025",method="POST",route="/ingest",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.05",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.075",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.1",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.25",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.5",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.75",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="1.0",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="2.5",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="5.0",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="7.5",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="10.0",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="+Inf",method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_count{method="POST",route="/ingest",status_code="200"} 2.0
+rag_request_latency_seconds_sum{method="POST",route="/ingest",status_code="200"} 0.049689375002344605
+rag_request_latency_seconds_bucket{le="0.005",method="POST",route="/agent/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.01",method="POST",route="/agent/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.025",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.05",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.075",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.1",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.25",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.5",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.75",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="1.0",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="2.5",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="5.0",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="7.5",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="10.0",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="+Inf",method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_count{method="POST",route="/agent/query",status_code="200"} 2.0
+rag_request_latency_seconds_sum{method="POST",route="/agent/query",status_code="200"} 0.027854291000039666
+rag_request_latency_seconds_bucket{le="0.005",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.01",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.025",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.05",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.075",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.1",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.25",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.5",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.75",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="1.0",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="2.5",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="5.0",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="7.5",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="10.0",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="+Inf",method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_count{method="GET",route="/admin/documents",status_code="200"} 2.0
+rag_request_latency_seconds_sum{method="GET",route="/admin/documents",status_code="200"} 0.004695708998042392
+rag_request_latency_seconds_bucket{le="0.005",method="POST",route="/query",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.01",method="POST",route="/query",status_code="200"} 3.0
+rag_request_latency_seconds_bucket{le="0.025",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.05",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.075",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.1",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.25",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.5",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.75",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="1.0",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="2.5",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="5.0",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="7.5",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="10.0",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="+Inf",method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_count{method="POST",route="/query",status_code="200"} 4.0
+rag_request_latency_seconds_sum{method="POST",route="/query",status_code="200"} 0.034723791999567766
+rag_request_latency_seconds_bucket{le="0.005",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.01",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.025",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.05",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.075",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.1",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.25",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.5",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.75",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="1.0",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="2.5",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="5.0",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="7.5",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="10.0",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="+Inf",method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_count{method="OPTIONS",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_sum{method="OPTIONS",route="/whoami",status_code="200"} 0.0027521669999259757
+rag_request_latency_seconds_bucket{le="0.005",method="GET",route="/whoami",status_code="200"} 2.0
+rag_request_latency_seconds_bucket{le="0.01",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.025",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.05",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.075",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.1",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.25",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.5",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="0.75",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="1.0",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="2.5",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="5.0",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="7.5",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="10.0",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_bucket{le="+Inf",method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_count{method="GET",route="/whoami",status_code="200"} 4.0
+rag_request_latency_seconds_sum{method="GET",route="/whoami",status_code="200"} 0.016195334002986783
+rag_request_latency_seconds_bucket{le="0.005",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.01",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.025",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.05",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.075",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.1",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.25",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.5",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.75",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="1.0",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="2.5",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="5.0",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="7.5",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="10.0",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="+Inf",method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_count{method="OPTIONS",route="/query",status_code="200"} 1.0
+rag_request_latency_seconds_sum{method="OPTIONS",route="/query",status_code="200"} 0.00018195899974671192
+rag_request_latency_seconds_bucket{le="0.005",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.01",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.025",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.05",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.075",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.1",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.25",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.5",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="0.75",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="1.0",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="2.5",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="5.0",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="7.5",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="10.0",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_bucket{le="+Inf",method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_count{method="OPTIONS",route="/admin/documents",status_code="200"} 1.0
+rag_request_latency_seconds_sum{method="OPTIONS",route="/admin/documents",status_code="200"} 0.00022545899992110208
+# HELP rag_request_latency_seconds_created HTTP request latency for CiteShield endpoints.
+# TYPE rag_request_latency_seconds_created gauge
+rag_request_latency_seconds_created{method="GET",route="/health",status_code="200"} 1.777786662321943e+09
+rag_request_latency_seconds_created{method="GET",route="/metrics",status_code="200"} 1.777786663461007e+09
+rag_request_latency_seconds_created{method="POST",route="/ingest",status_code="200"} 1.777786679267711e+09
+rag_request_latency_seconds_created{method="POST",route="/agent/query",status_code="200"} 1.777786696640123e+09
+rag_request_latency_seconds_created{method="GET",route="/admin/documents",status_code="200"} 1.7777866974087849e+09
+rag_request_latency_seconds_created{method="POST",route="/query",status_code="200"} 1.777786707962189e+09
+rag_request_latency_seconds_created{method="OPTIONS",route="/whoami",status_code="200"} 1.7777869204482172e+09
+rag_request_latency_seconds_created{method="GET",route="/whoami",status_code="200"} 1.777786920457739e+09
+rag_request_latency_seconds_created{method="OPTIONS",route="/query",status_code="200"} 1.77778692182516e+09
+rag_request_latency_seconds_created{method="OPTIONS",route="/admin/documents",status_code="200"} 1.777786923207963e+09
+# HELP rag_indexed_chunks Current number of indexed chunks stored in Qdrant.
+# TYPE rag_indexed_chunks gauge
+rag_indexed_chunks 2.0
+# HELP rag_retrieval_latency_seconds Retriever latency for /query.
+# TYPE rag_retrieval_latency_seconds histogram
+rag_retrieval_latency_seconds_bucket{le="0.005",route="/agent/query"} 1.0
+rag_retrieval_latency_seconds_bucket{le="0.01",route="/agent/query"} 1.0
+rag_retrieval_latency_seconds_bucket{le="0.025",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="0.05",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="0.075",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="0.1",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="0.25",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="0.5",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="0.75",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="1.0",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="2.5",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="5.0",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="7.5",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="10.0",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_bucket{le="+Inf",route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_count{route="/agent/query"} 2.0
+rag_retrieval_latency_seconds_sum{route="/agent/query"} 0.011815957997896476
+rag_retrieval_latency_seconds_bucket{le="0.005",route="/query"} 3.0
+rag_retrieval_latency_seconds_bucket{le="0.01",route="/query"} 3.0
+rag_retrieval_latency_seconds_bucket{le="0.025",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="0.05",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="0.075",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="0.1",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="0.25",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="0.5",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="0.75",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="1.0",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="2.5",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="5.0",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="7.5",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="10.0",route="/query"} 4.0
+rag_retrieval_latency_seconds_bucket{le="+Inf",route="/query"} 4.0
+rag_retrieval_latency_seconds_count{route="/query"} 4.0
+rag_retrieval_latency_seconds_sum{route="/query"} 0.020596332997229183
+# HELP rag_retrieval_latency_seconds_created Retriever latency for /query.
+# TYPE rag_retrieval_latency_seconds_created gauge
+rag_retrieval_latency_seconds_created{route="/agent/query"} 1.7777866966383948e+09
+rag_retrieval_latency_seconds_created{route="/query"} 1.777786707961331e+09
+# HELP rag_generation_latency_seconds Generator latency for /query.
+# TYPE rag_generation_latency_seconds histogram
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.005",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.01",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.025",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.05",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.075",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.1",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.25",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.5",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.75",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="1.0",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="2.5",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="5.0",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="7.5",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="10.0",route="/agent/query"} 2.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="+Inf",route="/agent/query"} 2.0
+rag_generation_latency_seconds_count{backend="extractive",route="/agent/query"} 2.0
+rag_generation_latency_seconds_sum{backend="extractive",route="/agent/query"} 0.0010449170003994368
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.005",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.01",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.025",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.05",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.075",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.1",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.25",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.5",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="0.75",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="1.0",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="2.5",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="5.0",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="7.5",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="10.0",route="/query"} 4.0
+rag_generation_latency_seconds_bucket{backend="extractive",le="+Inf",route="/query"} 4.0
+rag_generation_latency_seconds_count{backend="extractive",route="/query"} 4.0
+rag_generation_latency_seconds_sum{backend="extractive",route="/query"} 0.00042187500002910383
+# HELP rag_generation_latency_seconds_created Generator latency for /query.
+# TYPE rag_generation_latency_seconds_created gauge
+rag_generation_latency_seconds_created{backend="extractive",route="/agent/query"} 1.777786696638418e+09
+rag_generation_latency_seconds_created{backend="extractive",route="/query"} 1.777786707961349e+09
+# HELP rag_qdrant_latency_seconds Qdrant operation latency.
+# TYPE rag_qdrant_latency_seconds histogram
+rag_qdrant_latency_seconds_bucket{le="0.005",operation="agent_search"} 1.0
+rag_qdrant_latency_seconds_bucket{le="0.01",operation="agent_search"} 1.0
+rag_qdrant_latency_seconds_bucket{le="0.025",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="0.05",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="0.075",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="0.1",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="0.25",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="0.5",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="0.75",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="1.0",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="2.5",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="5.0",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="7.5",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="10.0",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_bucket{le="+Inf",operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_count{operation="agent_search"} 2.0
+rag_qdrant_latency_seconds_sum{operation="agent_search"} 0.011815957997896476
+rag_qdrant_latency_seconds_bucket{le="0.005",operation="search"} 3.0
+rag_qdrant_latency_seconds_bucket{le="0.01",operation="search"} 3.0
+rag_qdrant_latency_seconds_bucket{le="0.025",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="0.05",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="0.075",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="0.1",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="0.25",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="0.5",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="0.75",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="1.0",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="2.5",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="5.0",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="7.5",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="10.0",operation="search"} 4.0
+rag_qdrant_latency_seconds_bucket{le="+Inf",operation="search"} 4.0
+rag_qdrant_latency_seconds_count{operation="search"} 4.0
+rag_qdrant_latency_seconds_sum{operation="search"} 0.020596332997229183
+# HELP rag_qdrant_latency_seconds_created Qdrant operation latency.
+# TYPE rag_qdrant_latency_seconds_created gauge
+rag_qdrant_latency_seconds_created{operation="agent_search"} 1.777786696637266e+09
+rag_qdrant_latency_seconds_created{operation="search"} 1.777786707961219e+09
+# HELP rag_abstentions_total Total abstained answers.
+# TYPE rag_abstentions_total counter
+# HELP rag_citations_total Total citations returned by query responses.
+# TYPE rag_citations_total counter
+rag_citations_total{route="/agent/query"} 2.0
+rag_citations_total{route="/query"} 4.0
+# HELP rag_citations_created Total citations returned by query responses.
+# TYPE rag_citations_created gauge
+rag_citations_created{route="/agent/query"} 1.777786696638449e+09
+rag_citations_created{route="/query"} 1.777786707961368e+09
+# HELP rag_answer_abstentions_total Total abstained answers using the prompt-requested metric name.
+# TYPE rag_answer_abstentions_total counter
+# HELP rag_citation_count Citation count observed on the latest query response.
+# TYPE rag_citation_count gauge
+rag_citation_count{route="/agent/query"} 1.0
+rag_citation_count{route="/query"} 1.0
+# HELP rag_query_top_k Requested top_k observed on the latest query.
+# TYPE rag_query_top_k gauge
+rag_query_top_k{route="/agent/query"} 3.0
+rag_query_top_k{route="/query"} 3.0
+# HELP rag_cross_tenant_eval_failures_total Cross-tenant evaluation failures observed by evaluation runs.
+# TYPE rag_cross_tenant_eval_failures_total counter
+rag_cross_tenant_eval_failures_total 0.0
+# HELP rag_cross_tenant_eval_failures_created Cross-tenant evaluation failures observed by evaluation runs.
+# TYPE rag_cross_tenant_eval_failures_created gauge
+rag_cross_tenant_eval_failures_created 1.777786612390507e+09
+# HELP rag_evaluation_runs_total Total evaluation runs recorded.
+# TYPE rag_evaluation_runs_total counter
+rag_evaluation_runs_total 0.0
+# HELP rag_evaluation_runs_created Total evaluation runs recorded.
+# TYPE rag_evaluation_runs_created gauge
+rag_evaluation_runs_created 1.7777866123905122e+09
+# HELP rag_evaluation_retrieval_hit_rate Latest evaluation retrieval hit rate.
+# TYPE rag_evaluation_retrieval_hit_rate gauge
+rag_evaluation_retrieval_hit_rate 0.0
+# HELP rag_evaluation_citation_hit_rate Latest evaluation citation hit rate.
+# TYPE rag_evaluation_citation_hit_rate gauge
+rag_evaluation_citation_hit_rate 0.0
+# HELP rag_evaluation_abstention_rate_negative Latest abstention rate for negative/cross-tenant cases.
+# TYPE rag_evaluation_abstention_rate_negative gauge
+rag_evaluation_abstention_rate_negative 0.0

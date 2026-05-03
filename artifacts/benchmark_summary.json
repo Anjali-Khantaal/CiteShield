@@ -1,0 +1,70 @@
+{
+  "scenario": "local_synthetic_concurrent_testclient",
+  "description": "Offline-safe concurrent FastAPI TestClient benchmark with local Qdrant path storage.",
+  "scenarios": [
+    {
+      "users": 1,
+      "requests_per_user": 20,
+      "total_requests": 20,
+      "error_count": 0,
+      "error_rate": 0.0,
+      "requests_per_second": 161.39,
+      "query_p50_ms": 4.66,
+      "query_p95_ms": 11.77,
+      "query_avg_ms": 6.16,
+      "retrieval_avg_ms": 1.07,
+      "generation_avg_ms": 0.09,
+      "qdrant_available": true,
+      "generator_backend": "extractive",
+      "embedding_backend": "hash"
+    },
+    {
+      "users": 5,
+      "requests_per_user": 20,
+      "total_requests": 100,
+      "error_count": 0,
+      "error_rate": 0.0,
+      "requests_per_second": 135.73,
+      "query_p50_ms": 21.15,
+      "query_p95_ms": 126.69,
+      "query_avg_ms": 36.64,
+      "retrieval_avg_ms": 0.95,
+      "generation_avg_ms": 0.06,
+      "qdrant_available": true,
+      "generator_backend": "extractive",
+      "embedding_backend": "hash"
+    },
+    {
+      "users": 10,
+      "requests_per_user": 20,
+      "total_requests": 200,
+      "error_count": 0,
+      "error_rate": 0.0,
+      "requests_per_second": 183.8,
+      "query_p50_ms": 42.03,
+      "query_p95_ms": 162.02,
+      "query_avg_ms": 54.03,
+      "retrieval_avg_ms": 1.33,
+      "generation_avg_ms": 0.06,
+      "qdrant_available": true,
+      "generator_backend": "extractive",
+      "embedding_backend": "hash"
+    },
+    {
+      "users": 25,
+      "requests_per_user": 20,
+      "total_requests": 500,
+      "error_count": 0,
+      "error_rate": 0.0,
+      "requests_per_second": 166.84,
+      "query_p50_ms": 123.44,
+      "query_p95_ms": 262.77,
+      "query_avg_ms": 147.83,
+      "retrieval_avg_ms": 5.47,
+      "generation_avg_ms": 0.07,
+      "qdrant_available": true,
+      "generator_backend": "extractive",
+      "embedding_backend": "hash"
+    }
+  ]
+}

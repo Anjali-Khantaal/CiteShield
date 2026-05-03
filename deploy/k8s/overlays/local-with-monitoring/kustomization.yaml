@@ -1,0 +1,3 @@
+resources:
+  - ../local
+  - servicemonitor.yaml

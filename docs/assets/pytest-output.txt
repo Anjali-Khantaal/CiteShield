@@ -1,0 +1,12 @@
+..............................................................           [100%]
+=============================== warnings summary ===============================
+tests/test_admin.py::test_superuser_can_list_documents_across_tenants
+  /Users/anjalikhantaal/Desktop/LearningAIAgain/CiteShield/app/services/vector_store.py:107: UserWarning: Payload indexes have no effect in the local Qdrant. Please use server Qdrant if you need payload indexes.
+    client.create_payload_index(
+
+tests/test_generator.py::test_gemini_answer_generator_returns_grounded_answer_and_citations
+  /Users/anjalikhantaal/Desktop/LearningAIAgain/CiteShield/.conda/lib/python3.14/site-packages/google/genai/types.py:43: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+62 passed, 2 warnings in 8.38s

@@ -73,7 +73,7 @@ def test_metrics_endpoint_exposes_request_ingest_latency_and_gauge_metrics(tmp_p
         )
         query_response = test_client.post(
             "/query",
-            json={"question": "What is the VPN rule?", "top_k": 3},
+            json={"question": "How do employees use VPN for internal dashboards?", "top_k": 3},
             headers={"X-API-Key": tenant_a_key},
         )
         metrics_response = test_client.get("/metrics")
@@ -91,9 +91,18 @@ def test_metrics_endpoint_exposes_request_ingest_latency_and_gauge_metrics(tmp_p
     assert "rag_ingest_total" in body
     assert "rag_retrieval_errors_total" in body
     assert "rag_request_latency_seconds" in body
+    assert "rag_retrieval_latency_seconds" in body
+    assert "rag_generation_latency_seconds" in body
+    assert "rag_qdrant_latency_seconds" in body
+    assert "rag_answer_abstentions_total" in body
+    assert "rag_citation_count" in body
+    assert "rag_query_top_k" in body
+    assert "rag_cross_tenant_eval_failures_total" in body
     assert "rag_indexed_chunks" in body
     assert re.search(r'rag_ingest_total\{[^}]*method="POST"[^}]*route="/ingest"[^}]*status_code="200"[^}]*\}', body)
     assert re.search(r'rag_requests_total\{[^}]*method="POST"[^}]*route="/query"[^}]*status_code="200"[^}]*\}', body)
+    assert re.search(r'rag_query_top_k\{[^}]*route="/query"[^}]*\} 3.0', body)
+    assert re.search(r'rag_citation_count\{[^}]*route="/query"[^}]*\} 1.0', body)
     assert "rag_indexed_chunks 1.0" in body
 
 

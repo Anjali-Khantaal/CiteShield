@@ -6,11 +6,13 @@ from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routes.agent import router as agent_router
 from app.routes.admin import router as admin_router
 from app.config import get_settings
 from app.metrics import record_request, resolve_route_label, router as metrics_router
 from app.routes.health import router as health_router
 from app.routes.ingest import router as ingest_router
+from app.routes.media import router as media_router
 from app.routes.query import router as query_router
 from app.routes.session import router as session_router
 
@@ -65,6 +67,8 @@ def create_app() -> FastAPI:
     app.include_router(admin_router)
     app.include_router(ingest_router)
     app.include_router(query_router)
+    app.include_router(media_router)
+    app.include_router(agent_router)
     app.include_router(metrics_router)
     return app
 

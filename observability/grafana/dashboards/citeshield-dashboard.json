@@ -1,22 +1,72 @@
 {
-  "title": "CiteShield Platform Overview",
+  "title": "CiteShield RAG Platform",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
+  "refresh": "15s",
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
   "panels": [
     {
       "type": "timeseries",
       "title": "Request Rate",
-      "targets": [{"expr": "sum(rate(rag_requests_total[5m]))"}]
+      "targets": [{"expr": "sum(rate(rag_requests_total[5m])) by (route, status_code)"}]
     },
     {
       "type": "timeseries",
       "title": "P95 HTTP Latency",
-      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(rag_request_latency_seconds_bucket[5m])) by (le))"}]
+      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(rag_request_latency_seconds_bucket[5m])) by (le, route))"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "P95 Retrieval Latency",
+      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(rag_retrieval_latency_seconds_bucket[5m])) by (le, route))"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "P95 Generation Latency",
+      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(rag_generation_latency_seconds_bucket[5m])) by (le, backend))"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "P95 Qdrant Latency",
+      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(rag_qdrant_latency_seconds_bucket[5m])) by (le, operation))"}]
+    },
+    {
+      "type": "stat",
+      "title": "Indexed Chunks",
+      "targets": [{"expr": "rag_indexed_chunks"}]
+    },
+    {
+      "type": "stat",
+      "title": "Latest Citation Count",
+      "targets": [{"expr": "rag_citation_count"}]
+    },
+    {
+      "type": "stat",
+      "title": "Latest Query top_k",
+      "targets": [{"expr": "rag_query_top_k"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "Abstentions",
+      "targets": [{"expr": "sum(rate(rag_answer_abstentions_total[5m])) by (route)"}]
     },
     {
       "type": "timeseries",
       "title": "Retrieval Errors",
-      "targets": [{"expr": "sum(rate(rag_retrieval_errors_total[5m]))"}]
+      "targets": [{"expr": "sum(rate(rag_retrieval_errors_total[5m])) by (route)"}]
+    },
+    {
+      "type": "stat",
+      "title": "Evaluation Retrieval Hit Rate",
+      "targets": [{"expr": "rag_evaluation_retrieval_hit_rate"}]
+    },
+    {
+      "type": "stat",
+      "title": "Cross-Tenant Eval Failures",
+      "targets": [{"expr": "rag_cross_tenant_eval_failures_total"}]
     }
   ]
 }
